@@ -51,7 +51,6 @@ def reportChecker(reportList):
     return unsafe
 
 # Part 1
-
 for report in reportList:
     unsafe = reportChecker(report)
     if not unsafe:
