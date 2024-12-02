@@ -48,17 +48,19 @@ def reportChecker(reportList):
             unsafe = True
             break
         else: previousLevel = level
-        
     return unsafe
 
-# # Part 1
+# Part 1
 
-# part1answer = reportChecker(reportList)
-# print(f'The answer to day 1 part 1 = {part1answer}')
+for report in reportList:
+    unsafe = reportChecker(report)
+    if not unsafe:
+        print(f'Report: {report} is safe!')
+        part1answer += 1
 
 # Part 2
 reportDictPart2 = {}
-i = 0
+# i = 0
 for report in reportList:
     reportListAlternative = []
     reportSize = len(report)
@@ -67,7 +69,6 @@ for report in reportList:
     reportListAlternative.append(report)
     reportDictPart2[tuple(report)] = reportListAlternative
 
-unsafeRport = False 
 for report in reportDictPart2:
     for reportVersion in reportDictPart2[report]:
         unsafe = reportChecker(reportVersion)
@@ -75,6 +76,7 @@ for report in reportDictPart2:
             print(f'Report version: {reportVersion} of {report} is safe!')
             part2answer += 1
             break
-    
+
+print(f'The answer to day 1 part 1 = {part1answer}')   
 print(f'The answer to day 1 part 2 = {part2answer}')
 
