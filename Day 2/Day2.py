@@ -2,7 +2,10 @@
 file = open('Day 2\Input files\InputDay2.txt', 'r')
 # file = open('Day 2\Input files\TestInputDay2.txt', 'r')
 lineList = file.readlines()
-threshold = 3
+errorThreshold = 3
+part1answer = 0
+part2answer = 0
+report = []
 
 # Process file
 reportList = []
@@ -11,11 +14,10 @@ for line in lineList:
     report = [int(x) for x in report]
     reportList.append(report)
 
-
-# Part 1
-part1answer = 0
-for report in reportList:
-    
+# reportChecker
+def reportChecker(reportList):
+    report = reportList
+    answer = 0
     unsafe = False
     isIncreasing = False
     isDecreasing = False
@@ -41,19 +43,38 @@ for report in reportList:
             unsafe = True
             break
         # Any two adjacent levels differ by at most three.
-        elif abs(levelDistance) > threshold:
-            print(f'Report: {report} is unsafe, {level} and {previousLevel} are {abs(levelDistance)} apart instead of {threshold}. The report is skipped!')
+        elif abs(levelDistance) > errorThreshold:
+            print(f'Report: {report} is unsafe, {level} and {previousLevel} are {abs(levelDistance)} apart instead of {errorThreshold}. The report is skipped!')
             unsafe = True
             break
         else: previousLevel = level
-    
-    if not unsafe: 
-        print(f'Report: {report} is safe!')
-        part1answer += 1
+        
+    return unsafe
 
-print(f'The answer to day 1 part 1 = {part1answer}')
+# # Part 1
 
+# part1answer = reportChecker(reportList)
+# print(f'The answer to day 1 part 1 = {part1answer}')
 
 # Part 2
-part2answer = 0
-# print(f'The answer to day 1 part 2 = {part2answer}')
+reportDictPart2 = {}
+i = 0
+for report in reportList:
+    reportListAlternative = []
+    reportSize = len(report)
+    for i in range(reportSize):
+        reportListAlternative.append(report[:i] + report[i+1:])
+    reportListAlternative.append(report)
+    reportDictPart2[tuple(report)] = reportListAlternative
+
+unsafeRport = False 
+for report in reportDictPart2:
+    for reportVersion in reportDictPart2[report]:
+        unsafe = reportChecker(reportVersion)
+        if not unsafe:
+            print(f'Report version: {reportVersion} of {report} is safe!')
+            part2answer += 1
+            break
+    
+print(f'The answer to day 1 part 2 = {part2answer}')
+
