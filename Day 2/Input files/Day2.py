@@ -21,14 +21,11 @@ for report in reportList:
     isDecreasing = False
     previousLevel = report[0]
     level = report[1]
-    if level > previousLevel:
-        isIncreasing = True
-    elif level < previousLevel:
-        isDecreasing = True
+    if level > previousLevel: isIncreasing = True
+    elif level < previousLevel:isDecreasing = True
 
     for level in report[1:]:
         levelDistance = level - previousLevel
-        
         # Any two adjacent levels differ by at least one.
         if levelDistance == 0:
             print(f'Report: {report} is unsafe, {level} is the same as the previous level. The report is skipped!')
@@ -45,7 +42,7 @@ for report in reportList:
             break
         # Any two adjacent levels differ by at most three.
         elif abs(levelDistance) > threshold:
-            print(f'Report: {report} is unsafe, {level} and {previousLevel} are {levelDistance} apart instead of {threshold}. The report is skipped!')
+            print(f'Report: {report} is unsafe, {level} and {previousLevel} are {abs(levelDistance)} apart instead of {threshold}. The report is skipped!')
             unsafe = True
             break
         else: previousLevel = level
