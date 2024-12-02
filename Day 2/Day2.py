@@ -15,9 +15,7 @@ for line in lineList:
     reportList.append(report)
 
 # reportChecker
-def reportChecker(reportList):
-    report = reportList
-    answer = 0
+def reportChecker(report):
     unsafe = False
     isIncreasing = False
     isDecreasing = False
