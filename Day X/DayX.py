@@ -4,7 +4,8 @@ filePaths = {
     '2': 'Day X\Input files\TestInput.txt',
     '3': 'Day X\Input files\TestInputPart2.txt'
 }
-expectedTestOutput = 0
+expectedTestOutputPart1 = 0
+expectedTestOutputPart2 = 0
 
 ## Methods ##
 def parseFile(filepath):
@@ -34,7 +35,15 @@ choice = input("Enter choice (1/2/3): ")
 input = parseFile(filePaths[choice])
 
 # Part 1
-print(f'The answer to day 1 part 1 = {part1(input)}')
+part1answer = part1(input)
+print(f'The answer to day 1 part 1 = {part1answer}')
+if choice == '2':
+    testCorrect = part1answer == expectedTestOutputPart1
+    print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2
-print(f'The answer to day 1 part 2 = {part2(input)}')
+part2answer = part2(input)
+print(f'The answer to day 1 part 2 = {part2answer}')
+if choice == '2':
+    testCorrect = part1answer == expectedTestOutputPart1
+    print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart2} and got {part2answer}')
