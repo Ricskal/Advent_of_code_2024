@@ -45,5 +45,5 @@ if choice == '2':
 part2answer = part2(input)
 print(f'The answer to day X part 2 = {part2answer}')
 if choice == '2':
-    testCorrect = part1answer == expectedTestOutputPart1
+    testCorrect = part1answer == expectedTestOutputPart2
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart2} and got {part2answer}')
