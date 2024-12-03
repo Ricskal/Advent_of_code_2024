@@ -26,9 +26,9 @@ def part2(input):
 # Prompt user for input choice and parse file
 print("""
 Select input file to use:
-    1. Main Input
-    2. Test Input
-    3. Test Input part 2
+    1. Main input
+    2. Test input
+    3. Test input part 2
 """)
 choice = input("Enter choice (1/2/3): ")
 input = parseFile(filePaths[choice])
