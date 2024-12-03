@@ -1,5 +1,6 @@
 # variables
-file = open('Day X\Input files\InputDayX.txt', 'r')
+# file = open('Day X\Input files\Input.txt', 'r')
+file = open('Day X\Input files\TestInput.txt', 'r')
 line_list = file.readlines()
 list1 = []
 list2 = []
