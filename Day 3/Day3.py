@@ -36,7 +36,6 @@ def part2(input, part1answer):
     return part1answer - part2answer
 
 ## Main execution ##
-
 # Prompt user for input choice and parse file
 print("""
 Select input file to use:
