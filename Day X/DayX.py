@@ -37,4 +37,4 @@ input = parseFile(filePaths[choice])
 print(f'The answer to day 1 part 1 = {part1(input)}')
 
 # Part 2
-# print(f'The answer to day 1 part 2 = {part2(input)}')
+print(f'The answer to day 1 part 2 = {part2(input)}')
