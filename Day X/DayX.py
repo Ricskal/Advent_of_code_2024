@@ -4,6 +4,7 @@ filePaths = {
     '2': 'Day X\Input files\TestInput.txt',
     '3': 'Day X\Input files\TestInputPart2.txt'
 }
+expectedTestOutput = 0
 
 ## Methods ##
 def parseFile(filepath):
