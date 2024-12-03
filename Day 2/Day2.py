@@ -74,6 +74,6 @@ for report in reportDictPart2:
             part2answer += 1
             break
 
-print(f'The answer to day 1 part 1 = {part1answer}')   
-print(f'The answer to day 1 part 2 = {part2answer}')
+print(f'The answer to day 2 part 1 = {part1answer}')   
+print(f'The answer to day 2 part 2 = {part2answer}')
 

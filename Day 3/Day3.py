@@ -47,7 +47,7 @@ choice = input("Enter choice (1/2/3): ")
 input = parseFile(filePaths[choice])
 
 # Part 1
-print(f'The answer to day 1 part 1 = {part1(input)}')
+print(f'The answer to day 3 part 1 = {part1(input)}')
 
 # Part 2
-print(f'The answer to day 1 part 2 = {part2(input, part1(input))}')
+print(f'The answer to day 3 part 2 = {part2(input, part1(input))}')
