@@ -1,22 +1,26 @@
 # variables
-# file = open('Day X\Input files\Input.txt', 'r')
-file = open('Day X\Input files\TestInput.txt', 'r')
-line_list = file.readlines()
-list1 = []
-list2 = []
+part1answer = 0
+part2answer = 0
 
-# Process file
-for line in line_list:
-    list1.append(int(line.split()[0]))
-    list2.append(int(line.split()[1]))
-list1.sort()
-list2.sort()
+def parse_file(filepath):
+    parsedFile = ""
+    with open(filepath, 'r') as file:
+        for line in file:
+            parsedFile += line
+    return parsedFile
+
+def part1(input):
+    return part1answer
+
+def part2(input):
+    return part1answer
+
+# input = parse_file('Day X\Input files\Input.txt')
+input = parse_file('Day X\Input files\TestInput.txt')
+# input = parse_file('Day X\Input files\TestInputPart2.txt')
 
 # Part 1
-part1answer = 0
-# print(f'The answer to day 1 part 1 = {part1answer}')
-
+print(f'The answer to day 1 part 1 = {part1(input)}')
 
 # Part 2
-part2answer = 0
-# print(f'The answer to day 1 part 2 = {part2answer}')
+# print(f'The answer to day 1 part 2 = {part2(input)}')
