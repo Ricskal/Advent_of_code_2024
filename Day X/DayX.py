@@ -19,7 +19,7 @@ def part1(input):
 
 def part2(input):
     part2answer = 0
-    return part1answer
+    return part2answer
 
 ## Main execution ##
 # Prompt user for input choice and parse file
