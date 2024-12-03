@@ -12,6 +12,7 @@ part2answer = 0
 # Process file
 for line in lineList:
     memory += line
+memory += 'do()'
 
 # Part 1
 uncorruptMemory = []
