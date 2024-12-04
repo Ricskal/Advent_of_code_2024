@@ -4,6 +4,7 @@ filePaths = {
     '2': 'Day X\Input files\TestInput.txt',
     '3': 'Day X\Input files\TestInputPart2.txt'
 }
+defaultFile = True
 expectedTestOutputPart1 = 0
 expectedTestOutputPart2 = 0
 
@@ -25,13 +26,14 @@ def part2(input):
 
 ## Main execution ##
 # Prompt user for input choice and parse file
-print("""
-Select input file to use:
-    1. Main input
-    2. Test input
-    3. Test input part 2
-""")
-choice = input("Enter choice (1/2/3): ")
+if defaultFile: choice = '2'
+else:
+    print("""
+    Select input file to use:
+        1. Main input
+        2. Test input
+    """)
+    choice = input("Enter choice (1/2): ")
 input = parseFile(filePaths[choice])
 
 # Part 1
