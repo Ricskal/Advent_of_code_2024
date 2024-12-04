@@ -8,6 +8,9 @@ filePaths = {
     '2': 'Day 3\Input files\TestInput.txt',
     '3': 'Day 3\Input files\TestInputPart2.txt'
 }
+defaultFile = False
+expectedTestOutputPart1 = 161
+expectedTestOutputPart2 = 48
 
 ## Methods ##
 def parseFile(filepath):
@@ -37,17 +40,27 @@ def part2(input, part1answer):
 
 ## Main execution ##
 # Prompt user for input choice and parse file
-print("""
-Select input file to use:
-    1. Main Input
-    2. Test Input
-    3. Test Input Part 2
-""")
-choice = input("Enter choice (1/2/3): ")
+if defaultFile: choice = '2'
+else:
+    print("""
+    Select input file to use:
+        1. Main input
+        2. Test input
+        3. Test input part 2
+    """)
+    choice = input("Enter choice (1/2): ")
 input = parseFile(filePaths[choice])
 
 # Part 1
-print(f'The answer to day 3 part 1 = {part1(input)}')
+part1answer = part1(input)
+print(f'The answer to day 3 part 1 = {part1answer}')
+if choice == '2':
+    testCorrect = part1answer == expectedTestOutputPart1
+    print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2
-print(f'The answer to day 3 part 2 = {part2(input, part1(input))}')
+part2answer = part2(input, part1answer)
+print(f'The answer to day 3 part 2 = {part2answer}')
+if choice == '3':
+    testCorrect = part2answer == expectedTestOutputPart2
+    print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart2} and got {part2answer}')
