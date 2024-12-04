@@ -1,5 +1,8 @@
+import re
+
 ## variables ##
-day = 4
+folder = re.search(r'Day (\d{1,2})\\', __file__)
+day = folder.group(1)
 filePaths = {
     '1': 'Day ' + str(day) +'\Input files\Input.txt',
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
