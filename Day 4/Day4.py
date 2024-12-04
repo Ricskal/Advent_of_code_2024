@@ -4,16 +4,30 @@ filePaths = {
     '2': 'Day 4\Input files\TestInput.txt',
     '3': 'Day 4\Input files\TestInputPart2.txt'
 }
-expectedTestOutputPart1 = 0
+defaultFile = True
+expectedTestOutputPart1 = 18
 expectedTestOutputPart2 = 0
 
 ## Methods ##
 def parseFile(filepath):
-    parsedFile = ""
+    parsedFile = []
     with open(filepath, 'r') as file:
         for line in file:
-            parsedFile += line
+            parsedFile.append(line.strip())
     return parsedFile
+
+def mapLetters(input):
+    letterMap = {}
+    yCord = 0
+    for line in input:
+        yCord += 1
+        xCord = 0
+        for letter in line:
+            xCord += 1
+            letterMap[(xCord, yCord)] = letter
+    return letterMap
+            
+            
 
 def part1(input):
     part1answer = 0
@@ -25,14 +39,20 @@ def part2(input):
 
 ## Main execution ##
 # Prompt user for input choice and parse file
-print("""
-Select input file to use:
-    1. Main input
-    2. Test input
-    3. Test input part 2
-""")
-choice = input("Enter choice (1/2/3): ")
+if defaultFile:
+    choice = '2'
+else:
+    print("""
+    Select input file to use:
+        1. Main input
+        2. Test input
+        3. Test input part 2
+    """)
+    choice = input("Enter choice (1/2/3): ")
 input = parseFile(filePaths[choice])
+
+print(input)
+print(mapLetters(input))
 
 # Part 1
 part1answer = part1(input)
