@@ -1,8 +1,12 @@
 ## variables ##
+day = 1
 filePaths = {
-    '1': 'Day 1\Input files\Input.txt',
-    '2': 'Day 1\Input files\TestInput.txt'
+    '1': 'Day ' + str(day) +'\Input files\Input.txt',
+    '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
+defaultFile = False
+expectedTestOutputPart1 = 11
+expectedTestOutputPart2 = 31
 
 ## Methods ##
 def parseFile(filepath):
@@ -34,16 +38,26 @@ def part2(input1, input2):
 
 ## Main execution ##
 # Prompt user for input choice and parse file
-print("""
-Select input file to use:
-    1. Main input
-    2. Test input
-""")
-choice = input("Enter choice (1/2): ")
+if defaultFile: choice = '2'
+else:
+    print("""
+    Select input file to use:
+        1. Main input
+        2. Test input
+    """)
+    choice = input("Enter choice (1/2): ")
 input1, input2 = parseFile(filePaths[choice])
 
 # Part 1
-print(f'The answer to day 1 part 1 = {part1(input1, input2)}')
+part1answer = part1(input1, input2)
+print(f'The answer to day {day} part 1 = {part1answer}')
+if choice == '2':
+    testCorrect = part1answer == expectedTestOutputPart1
+    print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2
-print(f'The answer to day 1 part 2 = {part2(input1, input2)}')
+part2answer = part2(input1, input2)
+print(f'The answer to day {day} part 2 = {part2answer}')
+if choice == '2':
+    testCorrect = part2answer == expectedTestOutputPart2
+    print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart2} and got {part2answer}')

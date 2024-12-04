@@ -1,8 +1,8 @@
 ## variables ##
+day = 999
 filePaths = {
-    '1': 'Day X\Input files\Input.txt',
-    '2': 'Day X\Input files\TestInput.txt',
-    '3': 'Day X\Input files\TestInputPart2.txt'
+    '1': 'Day ' + str(day) +'\Input files\Input.txt',
+    '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 defaultFile = True
 expectedTestOutputPart1 = 0
@@ -38,14 +38,14 @@ input = parseFile(filePaths[choice])
 
 # Part 1
 part1answer = part1(input)
-print(f'The answer to day X part 1 = {part1answer}')
+print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2
 part2answer = part2(input)
-print(f'The answer to day X part 2 = {part2answer}')
+print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
     testCorrect = part2answer == expectedTestOutputPart2
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart2} and got {part2answer}')
