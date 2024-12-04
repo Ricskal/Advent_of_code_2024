@@ -4,7 +4,7 @@ filePaths = {
     '2': 'Day 4\Input files\TestInput.txt',
     '3': 'Day 4\Input files\TestInputPart2.txt'
 }
-defaultFile = True
+defaultFile = False
 expectedTestOutputPart1 = 18
 expectedTestOutputPart2 = 0
 
@@ -43,8 +43,8 @@ def part1(input):
                 right += input.get((key[0] +i,key[1]), '#')
                 #Check below right [X +1, Y +1]
                 belowRight += input.get((key[0] +i,key[1] +i), '#')
-                #Check below [X, Y -1]
-                below += input.get((key[0],key[1] -i), '#')
+                #Check below [X, Y +1]
+                below += input.get((key[0],key[1] +i), '#')
                 #Check below left [X -1, Y +1]
                 belowLeft += input.get((key[0] -i,key[1] +i), '#')           
                 #Check left [X -1, Y]
@@ -56,7 +56,6 @@ def part1(input):
         for tekst in values:
             if ('X' + tekst) == 'XMAS': 
                 part1answer += 1
-                print(f'Found X{tekst}')
     return part1answer
 
 def part2(input):
@@ -76,8 +75,6 @@ else:
     """)
     choice = input("Enter choice (1/2/3): ")
 input = parseFile(filePaths[choice])
-
-
 
 # Part 1
 part1answer = part1(mapLetters(input))
