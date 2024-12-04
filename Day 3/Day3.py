@@ -1,8 +1,6 @@
 import re
 
 ## variables ##
-patternPart1 = r"(mul)\((\d{1,3}),(\d{1,3})\)"
-patternPart2 = r"don't\(\)(.*?)do\(\)"
 day = 3
 filePaths = {
     '1': 'Day ' + str(day) +'\Input files\Input.txt',
@@ -12,6 +10,8 @@ filePaths = {
 defaultFile = False
 expectedTestOutputPart1 = 161
 expectedTestOutputPart2 = 48
+patternPart1 = r"(mul)\((\d{1,3}),(\d{1,3})\)"
+patternPart2 = r"don't\(\)(.*?)do\(\)"
 
 ## Methods ##
 def parseFile(filepath):
