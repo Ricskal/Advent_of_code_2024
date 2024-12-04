@@ -2,11 +2,10 @@
 filePaths = {
     '1': 'Day 4\Input files\Input.txt',
     '2': 'Day 4\Input files\TestInput.txt',
-    '3': 'Day 4\Input files\TestInputPart2.txt'
 }
 defaultFile = False
 expectedTestOutputPart1 = 18
-expectedTestOutputPart2 = 0
+expectedTestOutputPart2 = 9
 
 ## Methods ##
 def parseFile(filepath):
@@ -60,24 +59,42 @@ def part1(input):
 
 def part2(input):
     part2answer = 0
+    xmasDict = {}
+    validValues = {'SSMM', 'MSSM', 'MMSS', 'SMMS'}
+    for key in input.keys():
+        if input[key] == 'A':
+            letters = ''
+            #Check above right [X +1, Y -1]
+            letters += input.get((key[0] +1,key[1] -1), '#')
+            #Check below right [X +1, Y +1]
+            letters += input.get((key[0] +1,key[1] +1), '#')
+            #Check below left [X -1, Y +1]
+            letters += input.get((key[0] -1,key[1] +1), '#')                   
+            #Check above left [X -1, Y -1]
+            letters += input.get((key[0] -1,key[1] -1), '#')                
+            xmasDict[key] = letters
+    for value in xmasDict.values():
+        if value in validValues:
+            part2answer += 1
     return part2answer
 
 ## Main execution ##
 # Prompt user for input choice and parse file
-if defaultFile:
-    choice = '2'
+if defaultFile: choice = '2'
 else:
     print("""
     Select input file to use:
         1. Main input
         2. Test input
-        3. Test input part 2
     """)
-    choice = input("Enter choice (1/2/3): ")
+    choice = input("Enter choice (1/2): ")
 input = parseFile(filePaths[choice])
 
+# Transform input to a coördinate system
+input = mapLetters(input)
+
 # Part 1
-part1answer = part1(mapLetters(input))
+part1answer = part1(input)
 print(f'The answer to day 4 part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
@@ -87,5 +104,5 @@ if choice == '2':
 part2answer = part2(input)
 print(f'The answer to day 4 part 2 = {part2answer}')
 if choice == '2':
-    testCorrect = part1answer == expectedTestOutputPart2
+    testCorrect = part2answer == expectedTestOutputPart2
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart2} and got {part2answer}')
