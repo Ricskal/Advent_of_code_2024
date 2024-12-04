@@ -16,21 +16,47 @@ def parseFile(filepath):
             parsedFile.append(line.strip())
     return parsedFile
 
+## (xCord , yCord) = Letter
 def mapLetters(input):
     letterMap = {}
-    yCord = 0
+    yCord = -1
     for line in input:
         yCord += 1
-        xCord = 0
+        xCord = -1
         for letter in line:
             xCord += 1
             letterMap[(xCord, yCord)] = letter
     return letterMap
-            
-            
 
 def part1(input):
     part1answer = 0
+    xmasDict = {}
+    for key in input.keys():
+        if input[key] == 'X':
+            above, aboveRight, right, belowRight, below, belowLeft, left, aboveLeft = '', '', '', '', '', '', '', '' 
+            for i in range(1,4):
+                #Check above [X, Y -1]
+                above += input.get((key[0],key[1] -i), '#')
+                #Check above right [X +1, Y -1]
+                aboveRight += input.get((key[0] +i,key[1] -i), '#')
+                #Check right [X +1, Y]
+                right += input.get((key[0] +i,key[1]), '#')
+                #Check below right [X +1, Y +1]
+                belowRight += input.get((key[0] +i,key[1] +i), '#')
+                #Check below [X, Y -1]
+                below += input.get((key[0],key[1] -i), '#')
+                #Check below left [X -1, Y +1]
+                belowLeft += input.get((key[0] -i,key[1] +i), '#')           
+                #Check left [X -1, Y]
+                left += input.get((key[0] -i,key[1]), '#')          
+                #Check above left [X -1, Y -1]
+                aboveLeft += input.get((key[0] -i,key[1] -i), '#')                
+            xmasDict[key] = [above, aboveRight, right, belowRight, below, belowLeft, left, aboveLeft]
+    for values in xmasDict.values():
+        for tekst in values:
+            if ('X' + tekst) == 'XMAS': 
+                part1answer += 1
+                print(f'Found X{tekst}')
     return part1answer
 
 def part2(input):
@@ -51,11 +77,10 @@ else:
     choice = input("Enter choice (1/2/3): ")
 input = parseFile(filePaths[choice])
 
-print(input)
-print(mapLetters(input))
+
 
 # Part 1
-part1answer = part1(input)
+part1answer = part1(mapLetters(input))
 print(f'The answer to day 4 part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
