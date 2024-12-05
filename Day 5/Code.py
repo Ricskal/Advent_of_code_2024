@@ -7,7 +7,7 @@ filePaths = {
     '1': 'Day ' + str(day) +'\Input files\Input.txt',
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
-defaultFile = False
+defaultFile = True
 expectedTestOutputPart1 = 0
 expectedTestOutputPart2 = 0
 
