@@ -13,9 +13,7 @@ expectedTestOutputPart2 = 0
 
 ## Methods ##
 def parseFile(filepath):
-    parsedFile = []
-    parsedList1 = []
-    parsedList2 = []
+    parsedFile, parsedList1, parsedList2 = [], [], []
     with open(filepath, 'r') as file:
         for line in file:
             parsedFile.append(line.strip())
@@ -45,9 +43,15 @@ def parsePageOrderList(input):
     return beforeAfterNumberDict
 
 
-def part1(input):
+def part1(input1, input2):
     part1answer = 0
-    return part1answer
+    for numberList in input2:
+        for number in numberList:
+            
+    
+    
+    
+    # return part1answer
 
 def part2(input):
     part2answer = 0
@@ -64,10 +68,9 @@ else:
     """)
     choice = input("Enter choice (1/2): ")
 input1, input2 = parseFile(filePaths[choice])
-print(parsePageOrderList(input1))
 
 # Part 1
-part1answer = part1(input)
+part1answer = part1(parsePageOrderList(input1), input2)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
