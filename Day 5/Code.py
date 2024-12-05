@@ -8,16 +8,19 @@ filePaths = {
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 defaultFile = True
-expectedTestOutputPart1 = 0
+expectedTestOutputPart1 = 143
 expectedTestOutputPart2 = 0
 
 ## Methods ##
 def parseFile(filepath):
-    parsedFile = ""
+    parsedFile = []
     with open(filepath, 'r') as file:
         for line in file:
-            parsedFile += line
-    return parsedFile
+            parsedFile.append(line.strip())
+    index = parsedFile.index('')
+    printOrderList = parsedFile[:index]
+    pageList = parsedFile[index +1:]
+    return printOrderList, pageList
 
 def part1(input):
     part1answer = 0
@@ -37,7 +40,9 @@ else:
         2. Test input
     """)
     choice = input("Enter choice (1/2): ")
-input = parseFile(filePaths[choice])
+input1, input2 = parseFile(filePaths[choice])
+print(input1)
+print(input2)
 
 # Part 1
 part1answer = part1(input)
