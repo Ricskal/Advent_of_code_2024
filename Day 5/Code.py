@@ -14,13 +14,33 @@ expectedTestOutputPart2 = 0
 ## Methods ##
 def parseFile(filepath):
     parsedFile = []
+    newPageOrderList =[]
     with open(filepath, 'r') as file:
         for line in file:
             parsedFile.append(line.strip())
     index = parsedFile.index('')
-    printOrderList = parsedFile[:index]
+    pageOrderList = parsedFile[:index]
+    for pair in pageOrderList:
+        number1, number2 = pair.split('|')
+        newPageOrderList.append([int(number1), int(number2)])
     pageList = parsedFile[index +1:]
-    return printOrderList, pageList
+    return newPageOrderList, pageList
+
+def parsePageOrderList(input):
+    beforeAfterNumberDict = {}
+    for pair in input:
+        number1, number2 = pair[0], pair[1]
+        if number1 not in beforeAfterNumberDict:
+            beforeAfterNumberDict[number1] = [[],[number2]]
+        else:
+            beforeAfterNumberDict[number1][1].append(number2)
+            
+        if number2 not in beforeAfterNumberDict:
+            beforeAfterNumberDict[number2] = [[number1],[]]
+        else:
+            beforeAfterNumberDict[number2][0].append(number1)
+    return beforeAfterNumberDict
+
 
 def part1(input):
     part1answer = 0
@@ -41,7 +61,7 @@ else:
     """)
     choice = input("Enter choice (1/2): ")
 input1, input2 = parseFile(filePaths[choice])
-print(input1)
+print(parsePageOrderList(input1))
 print(input2)
 
 # Part 1
