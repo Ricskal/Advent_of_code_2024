@@ -12,7 +12,7 @@ filePaths = {
 }
 # Default configuration for input file and expected outputs for tests
 defaultFile = True
-expectedTestOutputPart1 = 0
+expectedTestOutputPart1 = 41
 expectedTestOutputPart2 = 0
 
 ## Methods ##
