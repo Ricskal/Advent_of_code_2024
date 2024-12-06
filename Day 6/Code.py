@@ -1,6 +1,7 @@
 import re
-import sys
+import os
 import time
+import sys
 
 ## Variables and Configuration ##
 # Extract the current day number from the file path
@@ -15,7 +16,7 @@ filePaths = {
 # Default configuration for input file and expected outputs for tests
 defaultFile = False
 expectedTestOutputPart1 = 41
-expectedTestOutputPart2 = 0
+expectedTestOutputPart2 = 6
 
 ## Methods ##
 def parseFile(filepath):
@@ -38,8 +39,13 @@ def mapTheLab(parsedFile):
             if thingy == '^': guardInitLocation = (xCord, yCord)
     return theLabMapDict, guardInitLocation
 
-def printTheLabMapDict(theLabMapDict, choice, clear_console=False):
-    time.sleep(0.1)
+def printTheLabMapDict(theLabMapDict, choice):
+    # Pause to make animation visible
+    time.sleep(0.2)
+
+    # Clear the console screen
+    os.system('cls')
+
     # Define the size of the grid
     if choice == '1':
         width = 130
@@ -51,12 +57,6 @@ def printTheLabMapDict(theLabMapDict, choice, clear_console=False):
         print("Error: can't print map of the lab.")
         return
 
-    # Optional: clear previous output if needed
-    if clear_console:
-        clear_command = '\033[F' * (height + 1)  # Move cursor up `height` lines
-        sys.stdout.write(clear_command)
-        sys.stdout.flush()
-    
     # Iterate over each row and column to print the grid
     for y in range(height):
         row = ""
@@ -65,76 +65,96 @@ def printTheLabMapDict(theLabMapDict, choice, clear_console=False):
             row += theLabMapDict.get((x, y), '.')
         print(row)
 
-# (xCord , yCord) = thingy
 def part1(theLabMapDict, guardInitLocation, choice):
-    part1answer = 0
-    guardCurrentLocation = list(guardInitLocation)
-    guardCurrentDirection = 'North'
+    part1answer = 0  
+    guardCurrentLocation = list(guardInitLocation)  # Start at the initial location of the guard
+    guardCurrentDirection = 'North'  # Initial direction of the guard
+    # Dictionaries defining turning and movement logic based on direction
     guardTurnDirectionDict = {'North': 'East', 'East': 'South', 'South': 'West', 'West': 'North'}
-    guardDirectionDict = {'North': (0, -1), 'East': (1, 0), 'South': (0,1), 'West': (-1, 0)}
+    guardDirectionDict = {'North': (0, -1), 'East': (1, 0), 'South': (0, 1), 'West': (-1, 0)}
+    
+    # Main loop, effectively simulating the guard's path until it's terminated
     while True:
+        # Logic for moving north
         if guardCurrentDirection == 'North':
-            guardNewLocation = (guardCurrentLocation[0] + guardDirectionDict['North'][0], guardCurrentLocation[1] + guardDirectionDict['North'][1])
-            guardNewLocationThingy = theLabMapDict.get(guardNewLocation)
+            guardNewLocation = (guardCurrentLocation[0] + guardDirectionDict['North'][0],
+                                guardCurrentLocation[1] + guardDirectionDict['North'][1])
+            guardNewLocationThingy = theLabMapDict.get(guardNewLocation)  # Fetch what's at the new location
+            # Move forward if path is clear ('.' or already visited 'X')
             if guardNewLocationThingy == '.' or guardNewLocationThingy == 'X':
+                # Mark current location as visited ('X') and move '^' to new location
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = 'X'
                 theLabMapDict[guardNewLocation] = '^'
                 guardCurrentLocation = guardNewLocation
-                # printTheLabMapDict(theLabMapDict, choice)
+                printTheLabMapDict(theLabMapDict, choice)  # Update map display
+            # Turn right if there's a wall ('#')
             elif guardNewLocationThingy == '#':
                 guardCurrentDirection = guardTurnDirectionDict['North']
+            # Terminate if out of bounds (None)
             elif guardNewLocationThingy is None:
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = 'X'
+                printTheLabMapDict(theLabMapDict, choice)
                 print(f'Out of bound! Last known location: {guardCurrentLocation}')
                 break
-            
+
+        # Logic for moving east
         if guardCurrentDirection == 'East':
-            guardNewLocation = (guardCurrentLocation[0] + guardDirectionDict['East'][0], guardCurrentLocation[1] + guardDirectionDict['East'][1])
+            guardNewLocation = (guardCurrentLocation[0] + guardDirectionDict['East'][0],
+                                guardCurrentLocation[1] + guardDirectionDict['East'][1])
             guardNewLocationThingy = theLabMapDict.get(guardNewLocation)
             if guardNewLocationThingy == '.' or guardNewLocationThingy == 'X':
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = 'X'
                 theLabMapDict[guardNewLocation] = '^'
                 guardCurrentLocation = guardNewLocation
-                # printTheLabMapDict(theLabMapDict, choice)
+                printTheLabMapDict(theLabMapDict, choice)
             elif guardNewLocationThingy == '#':
                 guardCurrentDirection = guardTurnDirectionDict['East']
             elif guardNewLocationThingy is None:
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = 'X'
+                printTheLabMapDict(theLabMapDict, choice)
                 print(f'Out of bound! Last known location: {guardCurrentLocation}')
                 break
-            
+
+        # Logic for moving south
         if guardCurrentDirection == 'South':
-            guardNewLocation = (guardCurrentLocation[0] + guardDirectionDict['South'][0], guardCurrentLocation[1] + guardDirectionDict['South'][1])
+            guardNewLocation = (guardCurrentLocation[0] + guardDirectionDict['South'][0],
+                                guardCurrentLocation[1] + guardDirectionDict['South'][1])
             guardNewLocationThingy = theLabMapDict.get(guardNewLocation)
             if guardNewLocationThingy == '.' or guardNewLocationThingy == 'X':
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = 'X'
                 theLabMapDict[guardNewLocation] = '^'
                 guardCurrentLocation = guardNewLocation
-                # printTheLabMapDict(theLabMapDict, choice)
+                printTheLabMapDict(theLabMapDict, choice)
             elif guardNewLocationThingy == '#':
                 guardCurrentDirection = guardTurnDirectionDict['South']
             elif guardNewLocationThingy is None:
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = 'X'
+                printTheLabMapDict(theLabMapDict, choice)
                 print(f'Out of bound! Last known location: {guardCurrentLocation}')
                 break
 
+        # Logic for moving west
         if guardCurrentDirection == 'West':
-            guardNewLocation = (guardCurrentLocation[0] + guardDirectionDict['West'][0], guardCurrentLocation[1] + guardDirectionDict['West'][1])
+            guardNewLocation = (guardCurrentLocation[0] + guardDirectionDict['West'][0],
+                                guardCurrentLocation[1] + guardDirectionDict['West'][1])
             guardNewLocationThingy = theLabMapDict.get(guardNewLocation)
             if guardNewLocationThingy == '.' or guardNewLocationThingy == 'X':
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = 'X'
                 theLabMapDict[guardNewLocation] = '^'
                 guardCurrentLocation = guardNewLocation
-                # printTheLabMapDict(theLabMapDict, choice)
+                printTheLabMapDict(theLabMapDict, choice)
             elif guardNewLocationThingy == '#':
                 guardCurrentDirection = guardTurnDirectionDict['West']
             elif guardNewLocationThingy is None:
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = 'X'
+                printTheLabMapDict(theLabMapDict, choice)
                 print(f'Out of bound! Last known location: {guardCurrentLocation}')
                 break
+    
+    # Count all locations marked as visited ('X')
     for value in theLabMapDict.values():
         if value == 'X':
-            part1answer +=1
+            part1answer += 1
     return part1answer
 
 def part2(input):
