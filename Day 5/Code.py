@@ -7,9 +7,9 @@ filePaths = {
     '1': 'Day ' + str(day) +'\Input files\Input.txt',
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
-defaultFile = False
+defaultFile = True
 expectedTestOutputPart1 = 143
-expectedTestOutputPart2 = 0
+expectedTestOutputPart2 = 123
 
 ## Methods ##
 def parseFile(filepath):
@@ -42,9 +42,9 @@ def parsePageOrderList(input):
             beforeAfterNumberDict[number2][0].append(number1)
     return beforeAfterNumberDict
 
-
 def part1(input1, input2):
     part1answer = 0
+    unvalidPageList = []
     for numberList in input2:
         numberListValid = True
         for number in numberList:
@@ -66,12 +66,45 @@ def part1(input1, input2):
             middleIndex = len(numberList) // 2
             part1answer += numberList[middleIndex]
         else: 
-            1 == 1
             # print(f'List {numberList} is not vallid')
-    return part1answer
+            unvalidPageList.append(numberList)
+    return part1answer, unvalidPageList
 
-def part2(input):
+def part2(unvalidPageList, pageOrderDict):
     part2answer = 0
+    for unvalidPage in unvalidPageList:
+        reorderdList = []
+        for number in unvalidPage:     
+
+            beforeNumberMaxIndex = None
+            allowedBeforeNumberList = pageOrderDict[number][0]
+            allowedBeforeNumberIndexList = []
+            for allowedBeforeNumber in allowedBeforeNumberList:
+                if allowedBeforeNumber in reorderdList:
+                    allowedBeforeNumberIndexList.append(reorderdList.index(allowedBeforeNumber))
+            if allowedBeforeNumberIndexList: beforeNumberMaxIndex = max(allowedBeforeNumberIndexList)
+
+            afterNumberMinIndex = None
+            allowedAfterNumberList = pageOrderDict[number][1]
+            allowedAfterNumberIndexList = []
+            for allowedAfterNumber in allowedAfterNumberList:
+                if allowedAfterNumber in reorderdList:
+                    allowedAfterNumberIndexList.append(reorderdList.index(allowedAfterNumber))
+            if allowedAfterNumberIndexList: afterNumberMinIndex = min(allowedAfterNumberIndexList)
+            
+            if beforeNumberMaxIndex is None and afterNumberMinIndex is None:
+                reorderdList.insert(0, number)
+            elif beforeNumberMaxIndex is not None and afterNumberMinIndex is None:
+                reorderdList.insert(beforeNumberMaxIndex +1, number)
+            elif beforeNumberMaxIndex is None and afterNumberMinIndex is not None:
+                reorderdList.insert(afterNumberMinIndex, number)
+            elif beforeNumberMaxIndex is not None and afterNumberMinIndex is not None:
+                reorderdList.insert(afterNumberMinIndex, number)
+            
+            print(reorderdList)
+        print(reorderdList)
+        middleIndex = len(reorderdList) // 2
+        part2answer += reorderdList[middleIndex]
     return part2answer
 
 ## Main execution ##
@@ -84,17 +117,19 @@ else:
         2. Test input
     """)
     choice = input("Enter choice (1/2): ")
-input1, input2 = parseFile(filePaths[choice])
+
+pageOrderList, pageList = parseFile(filePaths[choice])
+pageOrderDict = parsePageOrderList(pageOrderList)
+part1answer, unvalidPageList = part1(pageOrderDict, pageList)
+part2answer = part2(unvalidPageList, pageOrderDict)
 
 # Part 1
-part1answer = part1(parsePageOrderList(input1), input2)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2
-part2answer = part2(input)
 print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
     testCorrect = part2answer == expectedTestOutputPart2
