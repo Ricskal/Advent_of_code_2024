@@ -7,7 +7,7 @@ filePaths = {
     '1': 'Day ' + str(day) +'\Input files\Input.txt',
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
-defaultFile = True
+defaultFile = False
 expectedTestOutputPart1 = 143
 expectedTestOutputPart2 = 0
 
@@ -46,12 +46,29 @@ def parsePageOrderList(input):
 def part1(input1, input2):
     part1answer = 0
     for numberList in input2:
+        numberListValid = True
         for number in numberList:
-            
-    
-    
-    
-    # return part1answer
+            numberIndex = numberList.index(number)
+            beforeNumberList = numberList[:numberIndex]
+            afterNumberList = numberList[numberIndex +1:]
+            allowedBeforeNumber = input1[number][0]
+            allowedAfterNumber = input1[number][1]
+            for beforeNumber in beforeNumberList:
+                if beforeNumber in allowedAfterNumber:
+                    # print(f'Found number {beforeNumber} before number {number}. This is not allowed.')
+                    numberListValid = False
+            for afterNumber in afterNumberList:
+                if afterNumber in allowedBeforeNumber:
+                    # print(f'Found number {afterNumber} after number {number}. This is not allowed.')
+                    numberListValid = False
+        if numberListValid:
+            # print(f'List {numberList} is vallid')
+            middleIndex = len(numberList) // 2
+            part1answer += numberList[middleIndex]
+        else: 
+            1 == 1
+            # print(f'List {numberList} is not vallid')
+    return part1answer
 
 def part2(input):
     part2answer = 0
