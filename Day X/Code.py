@@ -1,12 +1,16 @@
 import re
 
-## variables ##
+## Variables and Configuration ##
+# Extract the current day number from the file path
 folder = re.search(r'Day (\d{1,2})\\', __file__)
 day = folder.group(1)
+
+# Define file paths for input and test input files
 filePaths = {
     '1': 'Day ' + str(day) +'\Input files\Input.txt',
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
+# Default configuration for input file and expected outputs for tests
 defaultFile = True
 expectedTestOutputPart1 = 0
 expectedTestOutputPart2 = 0
@@ -37,16 +41,19 @@ else:
         2. Test input
     """)
     choice = input("Enter choice (1/2): ")
+    
+# Parse the input file and process it into data
 input = parseFile(filePaths[choice])
 
-# Part 1
+# Output results for both parts and verify test results if applicable
+# Part 1 outputs
 part1answer = part1(input)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
-# Part 2
+# Part 2 outputs
 part2answer = part2(input)
 print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
