@@ -94,7 +94,7 @@ def part1(theLabMapDict, guardInitLocation, choice):
                 
                 # Detect if guard is in a loop (part 2)
                 if isinstance(theLabMapDict[(guardNewLocation[0], guardNewLocation[1])], list):
-                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'North' or guardNewLocation == guardPreviousLocation:
+                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'North':
                         if printTrue: print(f'We are in a loop')
                         loopCounter += 1
                         if printTrue: time.sleep(5)
@@ -127,7 +127,7 @@ def part1(theLabMapDict, guardInitLocation, choice):
                 
                 # Detect if guard is in a loop (part 2)
                 if isinstance(theLabMapDict[(guardNewLocation[0], guardNewLocation[1])], list):
-                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'East' or guardNewLocation == guardPreviousLocation:
+                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'East':
                         if printTrue: print(f'We are in a loop')
                         loopCounter += 1
                         if printTrue: time.sleep(5)
@@ -157,7 +157,7 @@ def part1(theLabMapDict, guardInitLocation, choice):
 
                 # Detect if guard is in a loop (part 2)
                 if isinstance(theLabMapDict[(guardNewLocation[0], guardNewLocation[1])], list):
-                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'South' or guardNewLocation == guardPreviousLocation:
+                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'South':
                         if printTrue: print(f'We are in a loop')
                         loopCounter += 1
                         if printTrue: time.sleep(5)
@@ -187,7 +187,7 @@ def part1(theLabMapDict, guardInitLocation, choice):
 
                 # Detect if guard is in a loop (part 2)
                 if isinstance(theLabMapDict[(guardNewLocation[0], guardNewLocation[1])], list):
-                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'West' or guardNewLocation == guardPreviousLocation:
+                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'West':
                         if printTrue: print(f'We are in a loop')
                         loopCounter += 1
                         if printTrue: time.sleep(5)
