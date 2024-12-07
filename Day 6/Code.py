@@ -70,7 +70,7 @@ def printTheLabMapDict(theLabMapDict, choice):
         print(row)
 
 def part1(theLabMapDict, guardInitLocation, choice):
-    printTrue = True
+    printTrue = False
     part1answer = 0  
     guardCurrentLocation = list(guardInitLocation)  # Start at the initial location of the guard
     guardCurrentDirection = 'North'  # Initial direction of the guard
@@ -104,12 +104,10 @@ def part1(theLabMapDict, guardInitLocation, choice):
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
                 guardPreviousDirection = guardCurrentDirection
                 theLabMapDict[guardNewLocation] = '^'
-                guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
                 if printTrue: printTheLabMapDict(theLabMapDict, choice)  # Update map display
             # Turn right if there's a wall ('#')
             elif guardNewLocationThingy == '#':
-                guardPreviousDirection = guardCurrentDirection
                 guardCurrentDirection = guardTurnDirectionDict['North']
             # Terminate if out of bounds (None)
             elif guardNewLocationThingy == '&':
@@ -136,11 +134,9 @@ def part1(theLabMapDict, guardInitLocation, choice):
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
                 guardPreviousDirection = guardCurrentDirection
                 theLabMapDict[guardNewLocation] = '^'
-                guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
                 if printTrue: printTheLabMapDict(theLabMapDict, choice)
             elif guardNewLocationThingy == '#':
-                guardPreviousDirection = guardCurrentDirection
                 guardCurrentDirection = guardTurnDirectionDict['East']
             elif guardNewLocationThingy == '&':
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
@@ -166,11 +162,9 @@ def part1(theLabMapDict, guardInitLocation, choice):
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
                 guardPreviousDirection = guardCurrentDirection
                 theLabMapDict[guardNewLocation] = '^'
-                guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
                 if printTrue: printTheLabMapDict(theLabMapDict, choice)
             elif guardNewLocationThingy == '#':
-                guardPreviousDirection = guardCurrentDirection
                 guardCurrentDirection = guardTurnDirectionDict['South']
             elif guardNewLocationThingy == '&':
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
@@ -196,11 +190,9 @@ def part1(theLabMapDict, guardInitLocation, choice):
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
                 guardPreviousDirection = guardCurrentDirection
                 theLabMapDict[guardNewLocation] = '^'
-                guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
                 if printTrue: printTheLabMapDict(theLabMapDict, choice)
             elif guardNewLocationThingy == '#':
-                guardPreviousDirection = guardCurrentDirection
                 guardCurrentDirection = guardTurnDirectionDict['West']
             elif guardNewLocationThingy == '&':
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
