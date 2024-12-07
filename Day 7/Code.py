@@ -12,7 +12,7 @@ filePaths = {
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = True
+defaultFile = False
 expectedTestOutputPart1 = 3749
 expectedTestOutputPart2 = 0
 
