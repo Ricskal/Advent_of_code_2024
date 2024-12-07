@@ -102,6 +102,7 @@ def part1(theLabMapDict, guardInitLocation, choice):
                          
                 # Mark current location as visited ('X') and move '^' to new location
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
+                guardPreviousDirection = guardCurrentDirection
                 theLabMapDict[guardNewLocation] = '^'
                 guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
@@ -133,6 +134,7 @@ def part1(theLabMapDict, guardInitLocation, choice):
                         break
                     
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
+                guardPreviousDirection = guardCurrentDirection
                 theLabMapDict[guardNewLocation] = '^'
                 guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
@@ -162,6 +164,7 @@ def part1(theLabMapDict, guardInitLocation, choice):
                         break
 
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
+                guardPreviousDirection = guardCurrentDirection
                 theLabMapDict[guardNewLocation] = '^'
                 guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
@@ -191,6 +194,7 @@ def part1(theLabMapDict, guardInitLocation, choice):
                         break
 
                 theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
+                guardPreviousDirection = guardCurrentDirection
                 theLabMapDict[guardNewLocation] = '^'
                 guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
@@ -219,7 +223,7 @@ def part2(theLabMapDict, guardInitLocation, choice):
         numberOfLoops += 1
         print(f'Loop: {numberOfLoops} out of ~16.900')
         for key2 in theLabMapDict.keys():
-            if isinstance(theLabMapDict[key2], list): theLabMapDict[key2] = '.'
+            if isinstance(theLabMapDict[key2], list) or theLabMapDict[key2] == '^': theLabMapDict[key2] = '.'
         if key == guardInitLocation: continue
         elif theLabMapDict[key] == '#': continue
         elif theLabMapDict[key] == '.': 
