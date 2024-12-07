@@ -1,3 +1,4 @@
+from itertools import product
 import re
 
 ## Variables and Configuration ##
@@ -17,14 +18,45 @@ expectedTestOutputPart2 = 0
 
 ## Methods ##
 def parseFile(filepath):
-    parsedFile = ""
+    calculationDict = {}
     with open(filepath, 'r') as file:
         for line in file:
-            parsedFile += line
-    return parsedFile
+            outcome, numbersStr = line.split(':')
+            numbersStrList = numbersStr.strip().split(' ')
+            numberList = [int(number) for number in numbersStrList]
+            calculationDict[int(outcome)] = numberList
+    return calculationDict
 
-def part1(input):
+def generateExpressions(numberList):
+    operators = ['+', '*']
+    n = len(numberList)
+    expressions = []
+    numberOfBrackets = n -1
+    
+    # Generate all combinations of operators for n-1 slots
+    for ops in product(operators, repeat=n-1):
+        firstNumber = True
+        expression = []
+        for j in range(numberOfBrackets): expression.append('(')
+        for i in range(n):
+            expression.append(str(numberList[i]))
+            if not firstNumber: expression.append(')')
+            if i < n-1:
+                expression.append(ops[i])
+            firstNumber = False
+        expressions.append(' '.join(expression))
+    return expressions
+
+def part1(calculationDict):
     part1answer = 0
+    for key in calculationDict.keys():
+        outcome = key
+        expressionList = generateExpressions(calculationDict[key])
+        for expression in expressionList:
+            if eval(expression) == outcome:
+                print(f'Expression: {expression} evaluates to {outcome}')
+                part1answer += outcome
+                break
     return part1answer
 
 def part2(input):
@@ -43,11 +75,11 @@ else:
     choice = input("Enter choice (1/2): ")
     
 # Parse the input file and process it into data
-input = parseFile(filePaths[choice])
+calculationDict = parseFile(filePaths[choice])
+part1answer = part1(calculationDict)
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
-part1answer = part1(input)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
