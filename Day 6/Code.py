@@ -12,7 +12,6 @@ day = folder.group(1)
 filePaths = {
     '1': 'Day ' + str(day) +'\Input files\Input.txt',
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
-    '3': 'Day ' + str(day) +'\Input files\TestInputPart2.txt'
 }
 # Default configuration for input file and expected outputs for tests
 defaultFile = False
@@ -46,7 +45,7 @@ def printTheLabMapDict(theLabMapDict, choice):
     # Clear the console screen
     os.system('cls')
     # Define the size of the grid
-    if choice in ('1', '3'):
+    if choice == '1':
         width = 130
         height = 130
     elif choice == '2':
@@ -220,7 +219,7 @@ def part2(theLabMapDict, guardInitLocation, choice):
         elif theLabMapDict[key] == '#': continue
         elif theLabMapDict[key] == '.': 
             theLabMapDict[key] = '#'
-            print(f'Placed # at {key}')
+            # print(f'Placed # at {key}')
         part1answer, loopCounter = part1(theLabMapDict, guardInitLocation, choice)
         theLabMapDict[key] = '.'
         part2answer += loopCounter
@@ -234,9 +233,8 @@ else:
     Select input file to use:
         1. Main input
         2. Test input
-        3. Test input part 2
     """)
-    choice = input("Enter choice (1/2/3): ")
+    choice = input("Enter choice (1/2): ")
     
 # Parse the input file and process it into data
 theLabMapList = parseFile(filePaths[choice])
