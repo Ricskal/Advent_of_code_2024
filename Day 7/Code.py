@@ -12,9 +12,9 @@ filePaths = {
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = False
+defaultFile = True
 expectedTestOutputPart1 = 3749
-expectedTestOutputPart2 = 0
+expectedTestOutputPart2 = 11387
 
 ## Methods ##
 def parseFile(filepath):
@@ -27,8 +27,7 @@ def parseFile(filepath):
             calculationDict[int(outcome)] = numberList
     return calculationDict
 
-def generateExpressions(numberList):
-    operators = ['+', '*']
+def generateExpressions(numberList, operators):
     n = len(numberList)
     expressions = []
     numberOfBrackets = n -1
@@ -47,20 +46,26 @@ def generateExpressions(numberList):
         expressions.append(' '.join(expression))
     return expressions
 
-def part1(calculationDict):
-    part1answer = 0
+def evaluateExpressions(calculationDict, operators):
+    outcomeSum = 0
     for key in calculationDict.keys():
         outcome = key
-        expressionList = generateExpressions(calculationDict[key])
+        expressionList = generateExpressions(calculationDict[key], operators)
         for expression in expressionList:
             if eval(expression) == outcome:
                 print(f'Expression: {expression} evaluates to {outcome}')
-                part1answer += outcome
+                outcomeSum += outcome
                 break
+    return outcomeSum
+
+def part1(calculationDict):
+    operators = ['+', '*']
+    part1answer = evaluateExpressions(calculationDict, operators)
     return part1answer
 
 def part2(input):
-    part2answer = 0
+    operators = ['+', '*', '||']
+    part2answer = evaluateExpressions(calculationDict, operators)
     return part2answer
 
 ## Main execution ##
@@ -76,7 +81,9 @@ else:
     
 # Parse the input file and process it into data
 calculationDict = parseFile(filePaths[choice])
-part1answer = part1(calculationDict)
+# part1answer = part1(calculationDict)
+part2answer = part2(calculationDict)
+part1answer = 0
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
@@ -86,7 +93,6 @@ if choice == '2':
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2 outputs
-part2answer = part2(input)
 print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
     testCorrect = part2answer == expectedTestOutputPart2
