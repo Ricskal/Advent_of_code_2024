@@ -12,9 +12,10 @@ day = folder.group(1)
 filePaths = {
     '1': 'Day ' + str(day) +'\Input files\Input.txt',
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
+    '3': 'Day ' + str(day) +'\Input files\TestInputPart2.txt'
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = True
+defaultFile = False
 expectedTestOutputPart1 = 41
 expectedTestOutputPart2 = 6
 
@@ -45,7 +46,7 @@ def printTheLabMapDict(theLabMapDict, choice):
     # Clear the console screen
     os.system('cls')
     # Define the size of the grid
-    if choice == '1':
+    if choice in ('1', '3'):
         width = 130
         height = 130
     elif choice == '2':
@@ -69,6 +70,7 @@ def printTheLabMapDict(theLabMapDict, choice):
         print(row)
 
 def part1(theLabMapDict, guardInitLocation, choice):
+    printTrue = True
     part1answer = 0  
     guardCurrentLocation = list(guardInitLocation)  # Start at the initial location of the guard
     guardCurrentDirection = 'North'  # Initial direction of the guard
@@ -76,6 +78,8 @@ def part1(theLabMapDict, guardInitLocation, choice):
     guardTurnDirectionDict = {'North': 'East', 'East': 'South', 'South': 'West', 'West': 'North'}
     guardDirectionDict = {'North': (0, -1), 'East': (1, 0), 'South': (0, 1), 'West': (-1, 0)}
     loopCounter = 0
+    guardPreviousLocation = []
+    guardPreviousDirection = 'North'
     
     # Main loop, effectively simulating the guard's path until it's terminated
     while True:
@@ -90,25 +94,27 @@ def part1(theLabMapDict, guardInitLocation, choice):
                 
                 # Detect if guard is in a loop (part 2)
                 if isinstance(theLabMapDict[(guardNewLocation[0], guardNewLocation[1])], list):
-                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'North':
-                        print(f'We are in a loop')
+                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'North' or guardNewLocation == guardPreviousLocation:
+                        if printTrue: print(f'We are in a loop')
                         loopCounter += 1
-                        time.sleep(5)
+                        if printTrue: time.sleep(5)
                         break
                          
                 # Mark current location as visited ('X') and move '^' to new location
-                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', 'North']
+                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
                 theLabMapDict[guardNewLocation] = '^'
+                guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
-                printTheLabMapDict(theLabMapDict, choice)  # Update map display
+                if printTrue: printTheLabMapDict(theLabMapDict, choice)  # Update map display
             # Turn right if there's a wall ('#')
             elif guardNewLocationThingy == '#':
+                guardPreviousDirection = guardCurrentDirection
                 guardCurrentDirection = guardTurnDirectionDict['North']
             # Terminate if out of bounds (None)
             elif guardNewLocationThingy == '&':
-                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', 'North']
-                printTheLabMapDict(theLabMapDict, choice)
-                print(f'Out of bound! Last known location: {guardCurrentLocation}')
+                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
+                if printTrue: printTheLabMapDict(theLabMapDict, choice)
+                if printTrue: print(f'Out of bound! Last known location: {guardCurrentLocation}')
                 break
 
         # Logic for moving east
@@ -120,22 +126,24 @@ def part1(theLabMapDict, guardInitLocation, choice):
                 
                 # Detect if guard is in a loop (part 2)
                 if isinstance(theLabMapDict[(guardNewLocation[0], guardNewLocation[1])], list):
-                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'East':
-                        print(f'We are in a loop')
+                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'East' or guardNewLocation == guardPreviousLocation:
+                        if printTrue: print(f'We are in a loop')
                         loopCounter += 1
-                        time.sleep(5)
+                        if printTrue: time.sleep(5)
                         break
                     
-                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', 'East']
+                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
                 theLabMapDict[guardNewLocation] = '^'
+                guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
-                printTheLabMapDict(theLabMapDict, choice)
+                if printTrue: printTheLabMapDict(theLabMapDict, choice)
             elif guardNewLocationThingy == '#':
+                guardPreviousDirection = guardCurrentDirection
                 guardCurrentDirection = guardTurnDirectionDict['East']
             elif guardNewLocationThingy == '&':
-                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', 'East']
-                printTheLabMapDict(theLabMapDict, choice)
-                print(f'Out of bound! Last known location: {guardCurrentLocation}')
+                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
+                if printTrue: printTheLabMapDict(theLabMapDict, choice)
+                if printTrue: print(f'Out of bound! Last known location: {guardCurrentLocation}')
                 break
 
         # Logic for moving south
@@ -147,22 +155,24 @@ def part1(theLabMapDict, guardInitLocation, choice):
 
                 # Detect if guard is in a loop (part 2)
                 if isinstance(theLabMapDict[(guardNewLocation[0], guardNewLocation[1])], list):
-                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'South':
-                        print(f'We are in a loop')
+                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'South' or guardNewLocation == guardPreviousLocation:
+                        if printTrue: print(f'We are in a loop')
                         loopCounter += 1
-                        time.sleep(5)
+                        if printTrue: time.sleep(5)
                         break
 
-                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', 'South']
+                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
                 theLabMapDict[guardNewLocation] = '^'
+                guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
-                printTheLabMapDict(theLabMapDict, choice)
+                if printTrue: printTheLabMapDict(theLabMapDict, choice)
             elif guardNewLocationThingy == '#':
+                guardPreviousDirection = guardCurrentDirection
                 guardCurrentDirection = guardTurnDirectionDict['South']
             elif guardNewLocationThingy == '&':
-                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', 'South']
-                printTheLabMapDict(theLabMapDict, choice)
-                print(f'Out of bound! Last known location: {guardCurrentLocation}')
+                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
+                if printTrue: printTheLabMapDict(theLabMapDict, choice)
+                if printTrue: print(f'Out of bound! Last known location: {guardCurrentLocation}')
                 break
 
         # Logic for moving west
@@ -174,22 +184,24 @@ def part1(theLabMapDict, guardInitLocation, choice):
 
                 # Detect if guard is in a loop (part 2)
                 if isinstance(theLabMapDict[(guardNewLocation[0], guardNewLocation[1])], list):
-                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'West':
-                        print(f'We are in a loop')
+                    if theLabMapDict[(guardNewLocation[0], guardNewLocation[1])][1] == 'West' or guardNewLocation == guardPreviousLocation:
+                        if printTrue: print(f'We are in a loop')
                         loopCounter += 1
-                        time.sleep(5)
+                        if printTrue: time.sleep(5)
                         break
 
-                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', 'West']
+                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
                 theLabMapDict[guardNewLocation] = '^'
+                guardPreviousLocation = guardCurrentLocation
                 guardCurrentLocation = guardNewLocation
-                printTheLabMapDict(theLabMapDict, choice)
+                if printTrue: printTheLabMapDict(theLabMapDict, choice)
             elif guardNewLocationThingy == '#':
+                guardPreviousDirection = guardCurrentDirection
                 guardCurrentDirection = guardTurnDirectionDict['West']
             elif guardNewLocationThingy == '&':
-                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', 'West']
-                printTheLabMapDict(theLabMapDict, choice)
-                print(f'Out of bound! Last known location: {guardCurrentLocation}')
+                theLabMapDict[(guardCurrentLocation[0], guardCurrentLocation[1])] = ['X', guardPreviousDirection]
+                if printTrue: printTheLabMapDict(theLabMapDict, choice)
+                if printTrue: print(f'Out of bound! Last known location: {guardCurrentLocation}')
                 break
     
     # Count all locations marked as visited ('X')
@@ -202,12 +214,17 @@ def part1(theLabMapDict, guardInitLocation, choice):
 
 def part2(theLabMapDict, guardInitLocation, choice):
     part2answer = 0
+    numberOfLoops = 0
     for key in theLabMapDict.keys():
+        numberOfLoops += 1
+        print(f'Loop: {numberOfLoops} out of ~16.900')
         for key2 in theLabMapDict.keys():
             if isinstance(theLabMapDict[key2], list): theLabMapDict[key2] = '.'
         if key == guardInitLocation: continue
         elif theLabMapDict[key] == '#': continue
-        elif theLabMapDict[key] == '.': theLabMapDict[key] = '#'
+        elif theLabMapDict[key] == '.': 
+            theLabMapDict[key] = '#'
+            print(f'Placed # at {key}')
         part1answer, loopCounter = part1(theLabMapDict, guardInitLocation, choice)
         theLabMapDict[key] = '.'
         part2answer += loopCounter
@@ -221,8 +238,9 @@ else:
     Select input file to use:
         1. Main input
         2. Test input
+        3. Test input part 2
     """)
-    choice = input("Enter choice (1/2): ")
+    choice = input("Enter choice (1/2/3): ")
     
 # Parse the input file and process it into data
 theLabMapList = parseFile(filePaths[choice])
