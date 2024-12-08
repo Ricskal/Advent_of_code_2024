@@ -17,14 +17,35 @@ expectedTestOutputPart2 = 0
 
 ## Methods ##
 def parseFile(filepath):
-    parsedFile = ""
+    parsedFile = []
     with open(filepath, 'r') as file:
         for line in file:
-            parsedFile += line
+            parsedFile.append(line.strip())
     return parsedFile
 
+def mapTheAntennas(parsedFile):
+    # (xCord , yCord) = frequency
+    antennaMapDict = {}
+    yCord = -1
+    for line in parsedFile:
+        yCord += 1
+        xCord = -1
+        for frequency in line:
+            xCord += 1
+            if frequency != '.':
+                if frequency not in antennaMapDict: antennaMapDict[frequency] = [(xCord, yCord)]
+                else: antennaMapDict[frequency].append((xCord, yCord))
+    maxBound = (xCord, yCord)
+    minBound = (0, 0)
+    return antennaMapDict, minBound, maxBound
+
+# def calculateAntinodes(antennaMapDict):
+#     for antenna in antennaMapDict.keys():
+    
+    
 def part1(input):
     part1answer = 0
+    # pairs = list(combinations(inputs, 2))
     return part1answer
 
 def part2(input):
@@ -44,6 +65,8 @@ else:
     
 # Parse the input file and process it into data
 input = parseFile(filePaths[choice])
+antennaMapDict, minBound, maxBound = mapTheAntennas(input)
+# calculateAntinodes(antennaMapDict)
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
