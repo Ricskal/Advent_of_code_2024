@@ -50,34 +50,34 @@ def pairAntennas(antennaMapDict):
         antennaPairDict[antenna] = list(combinations(antennaMapDict[antenna], 2))
     return antennaPairDict
 
-# def part1(antennaPairDict, minBound, maxBound):
-#     # Computes positions for potential antinodes and applies boundary filtering
-#     antinodesSet = set()
-#     for antenna in antennaPairDict.keys():
-#         antennaPairList = antennaPairDict[antenna]
-#         for antennaPair in antennaPairList:
-#             antenna1 = antennaPair[0]
-#             antenna2 = antennaPair[1]
-#             offset = (antenna1[0] - antenna2[0], antenna1[1] - antenna2[1])
-#             # Calculate potential antinodes for both antennas in the pair
-#             # Adding and subtracting offset from each coordinate
-#             antinodesList = [
-#                 (antenna1[0] + offset[0], antenna1[1] + offset[1]),
-#                 (antenna1[0] - offset[0], antenna1[1] - offset[1]),
-#                 (antenna2[0] + offset[0], antenna2[1] + offset[1]),
-#                 (antenna2[0] - offset[0], antenna2[1] - offset[1])
-#             ]    
-#             # Add valid antinodes, they cannot overlap their own antenna's
-#             for antinode in antinodesList:
-#                 if antinode not in (antenna1, antenna2):
-#                     antinodesSet.add(antinode)
-#     # Filtering antinodes that are out of specified bounds
-#     invalidAntinodesSet = set()
-#     for antinode in antinodesSet:
-#         if antinode[0] > maxBound[0] or antinode[0] < minBound[0]: invalidAntinodesSet.add(antinode)
-#         elif antinode[1] > maxBound[1] or antinode[1] < minBound[1]: invalidAntinodesSet.add(antinode)
-#     antinodesSet = antinodesSet - invalidAntinodesSet
-#     return len(antinodesSet)
+def part1(antennaPairDict, minBound, maxBound):
+    # Computes positions for potential antinodes and applies boundary filtering
+    antinodesSet = set()
+    for antenna in antennaPairDict.keys():
+        antennaPairList = antennaPairDict[antenna]
+        for antennaPair in antennaPairList:
+            antenna1 = antennaPair[0]
+            antenna2 = antennaPair[1]
+            offset = (antenna1[0] - antenna2[0], antenna1[1] - antenna2[1])
+            # Calculate potential antinodes for both antennas in the pair
+            # Adding and subtracting offset from each coordinate
+            antinodesList = [
+                (antenna1[0] + offset[0], antenna1[1] + offset[1]),
+                (antenna1[0] - offset[0], antenna1[1] - offset[1]),
+                (antenna2[0] + offset[0], antenna2[1] + offset[1]),
+                (antenna2[0] - offset[0], antenna2[1] - offset[1])
+            ]    
+            # Add valid antinodes, they cannot overlap their own antenna's
+            for antinode in antinodesList:
+                if antinode not in (antenna1, antenna2):
+                    antinodesSet.add(antinode)
+    # Filtering antinodes that are out of specified bounds
+    invalidAntinodesSet = set()
+    for antinode in antinodesSet:
+        if antinode[0] > maxBound[0] or antinode[0] < minBound[0]: invalidAntinodesSet.add(antinode)
+        elif antinode[1] > maxBound[1] or antinode[1] < minBound[1]: invalidAntinodesSet.add(antinode)
+    antinodesSet = antinodesSet - invalidAntinodesSet
+    return len(antinodesSet)
 
 def part2(antennaPairDict, minBound, maxBound):
     # Computes positions for potential antinodes and applies boundary filtering
@@ -87,30 +87,29 @@ def part2(antennaPairDict, minBound, maxBound):
         for antennaPair in antennaPairList:
             antenna1 = antennaPair[0]
             antenna2 = antennaPair[1]
+            # Calculate the offset between the antennas
             offset = (antenna1[0] - antenna2[0], antenna1[1] - antenna2[1])
-
             i = 0
+            # Initialize a list to store potential antinodes
             antinodesList = []
-            while i < 1000:
-            
-                antinodesList.append((antenna1[0] + offset[0] *i, antenna1[1] + offset[1] *i))
-                antinodesList.append((antenna1[0] - offset[0] *i, antenna1[1] - offset[1] *i))
-                antinodesList.append((antenna2[0] + offset[0] *i, antenna2[1] + offset[1] *i))
-                antinodesList.append((antenna2[0] - offset[0] *i, antenna2[1] - offset[1] *i))
-
-                i +=1
-            
-            # Add valid antinodes, they cannot overlap their own antenna's
+            while i <= 420:
+                # Generate antinodes by adding and subtracting the offset multiple times
+                antinodesList.append((antenna1[0] + offset[0] * i, antenna1[1] + offset[1] * i))
+                antinodesList.append((antenna1[0] - offset[0] * i, antenna1[1] - offset[1] * i))
+                antinodesList.append((antenna2[0] + offset[0] * i, antenna2[1] + offset[1] * i))
+                antinodesList.append((antenna2[0] - offset[0] * i, antenna2[1] - offset[1] * i))
+                i += 1
+            # Add each calculated antinode to the set for uniqueness
             for antinode in antinodesList:
-                # if antinode not in (antenna1, antenna2):
                 antinodesSet.add(antinode)
     # Filtering antinodes that are out of specified bounds
     invalidAntinodesSet = set()
     for antinode in antinodesSet:
-        if antinode[0] > maxBound[0] or antinode[0] < minBound[0]: invalidAntinodesSet.add(antinode)
-        elif antinode[1] > maxBound[1] or antinode[1] < minBound[1]: invalidAntinodesSet.add(antinode)
+        if antinode[0] > maxBound[0] or antinode[0] < minBound[0]:
+            invalidAntinodesSet.add(antinode)
+        elif antinode[1] > maxBound[1] or antinode[1] < minBound[1]:
+            invalidAntinodesSet.add(antinode)
     antinodesSet = antinodesSet - invalidAntinodesSet
-    print(antinodesSet)
     return len(antinodesSet)
 
 ## Main execution ##
@@ -131,11 +130,11 @@ antennaPairDict = pairAntennas(antennaMapDict)
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
-# part1answer = part1(antennaPairDict, minBound, maxBound)
-# print(f'The answer to day {day} part 1 = {part1answer}')
-# if choice == '2':
-#     testCorrect = part1answer == expectedTestOutputPart1
-#     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
+part1answer = part1(antennaPairDict, minBound, maxBound)
+print(f'The answer to day {day} part 1 = {part1answer}')
+if choice == '2':
+    testCorrect = part1answer == expectedTestOutputPart1
+    print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2 outputs
 part2answer = part2(antennaPairDict, minBound, maxBound)
