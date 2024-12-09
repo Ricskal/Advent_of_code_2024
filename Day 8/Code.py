@@ -1,4 +1,5 @@
 import re
+from itertools import combinations
 
 ## Variables and Configuration ##
 # Extract the current day number from the file path
@@ -11,7 +12,7 @@ filePaths = {
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = True
+defaultFile = False
 expectedTestOutputPart1 = 14
 expectedTestOutputPart2 = 0
 
@@ -24,28 +25,56 @@ def parseFile(filepath):
     return parsedFile
 
 def mapTheAntennas(parsedFile):
-    # (xCord , yCord) = frequency
+    # (xCord , yCord) = antenna
     antennaMapDict = {}
     yCord = -1
     for line in parsedFile:
         yCord += 1
         xCord = -1
-        for frequency in line:
+        for antenna in line:
             xCord += 1
-            if frequency != '.':
-                if frequency not in antennaMapDict: antennaMapDict[frequency] = [(xCord, yCord)]
-                else: antennaMapDict[frequency].append((xCord, yCord))
+            if antenna != '.':
+                if antenna not in antennaMapDict: antennaMapDict[antenna] = [(xCord, yCord)]
+                else: antennaMapDict[antenna].append((xCord, yCord))
     maxBound = (xCord, yCord)
     minBound = (0, 0)
     return antennaMapDict, minBound, maxBound
 
-# def calculateAntinodes(antennaMapDict):
-#     for antenna in antennaMapDict.keys():
-    
-    
-def part1(input):
-    part1answer = 0
-    # pairs = list(combinations(inputs, 2))
+def pairAntennas(antennaMapDict):
+    antennaPairDict = {}
+    for antenna in antennaMapDict.keys():
+        antennaPairDict[antenna] = list(combinations(antennaMapDict[antenna], 2))
+    return antennaPairDict
+# 1 antenna???
+
+def calculateAntinodes(antennaPairDict, minBound, maxBound):
+    antinodesSet = set()
+    for antenna in antennaPairDict.keys():
+        antennaPairList = antennaPairDict[antenna]
+        for antennaPair in antennaPairList:
+            antenna1 = antennaPair[0]
+            antenna2 = antennaPair[1]
+            offset = (antenna1[0] - antenna2[0], antenna1[1] - antenna2[1])
+            # antenna1 antinodes          
+            antinode1 = (antenna1[0] + offset[0], antenna1[1] + offset[1])
+            antinode2 = (antenna1[0] - offset[0], antenna1[1] - offset[1])
+            if antinode1 != antenna2: antinodesSet.add(antinode1)
+            if antinode2 != antenna2: antinodesSet.add(antinode2)
+            # antenna2 antinodes
+            antinode3 = (antenna2[0] + offset[0], antenna2[1] + offset[1])
+            antinode4 = (antenna2[0] - offset[0], antenna2[1] - offset[1])
+            if antinode3 != antenna1: antinodesSet.add(antinode3)
+            if antinode4 != antenna1: antinodesSet.add(antinode4)
+    invalidAntinodesSet = set()
+    for antinode in antinodesSet:
+        if antinode[0] > maxBound[0] or antinode[0] < minBound[0]: invalidAntinodesSet.add(antinode)
+        elif antinode[1] > maxBound[1] or antinode[1] < minBound[1]: invalidAntinodesSet.add(antinode)
+    antinodesSet = antinodesSet - invalidAntinodesSet
+    print(antinodesSet)
+    return antinodesSet
+
+def part1(antinodesSet):
+    part1answer = len(antinodesSet)
     return part1answer
 
 def part2(input):
@@ -66,11 +95,12 @@ else:
 # Parse the input file and process it into data
 input = parseFile(filePaths[choice])
 antennaMapDict, minBound, maxBound = mapTheAntennas(input)
-# calculateAntinodes(antennaMapDict)
+antennaPairDict = pairAntennas(antennaMapDict)
+antinodesSet = calculateAntinodes(antennaPairDict, minBound, maxBound)
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
-part1answer = part1(input)
+part1answer = part1(antinodesSet)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
