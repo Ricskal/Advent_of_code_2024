@@ -25,6 +25,7 @@ def parseFile(filepath):
     return parsedFile
 
 def mapTheAntennas(parsedFile):
+    # Maps antenna positions to coordinates and organizes them into a dictionary
     # (xCord , yCord) = antenna
     antennaMapDict = {}
     yCord = -1
@@ -33,21 +34,24 @@ def mapTheAntennas(parsedFile):
         xCord = -1
         for antenna in line:
             xCord += 1
+            # Logic to skip empty positions '.' and map antenna coordinates
             if antenna != '.':
                 if antenna not in antennaMapDict: antennaMapDict[antenna] = [(xCord, yCord)]
                 else: antennaMapDict[antenna].append((xCord, yCord))
+   # Define boundaries for the antenna map
     maxBound = (xCord, yCord)
     minBound = (0, 0)
     return antennaMapDict, minBound, maxBound
 
 def pairAntennas(antennaMapDict):
+    # Creates all unique pairs of coordinates for each type of antenna
     antennaPairDict = {}
     for antenna in antennaMapDict.keys():
         antennaPairDict[antenna] = list(combinations(antennaMapDict[antenna], 2))
     return antennaPairDict
-# 1 antenna???
 
 def calculateAntinodes(antennaPairDict, minBound, maxBound):
+    # Computes positions for potential antinodes and applies boundary filtering
     antinodesSet = set()
     for antenna in antennaPairDict.keys():
         antennaPairList = antennaPairDict[antenna]
@@ -55,22 +59,24 @@ def calculateAntinodes(antennaPairDict, minBound, maxBound):
             antenna1 = antennaPair[0]
             antenna2 = antennaPair[1]
             offset = (antenna1[0] - antenna2[0], antenna1[1] - antenna2[1])
-            # antenna1 antinodes          
-            antinode1 = (antenna1[0] + offset[0], antenna1[1] + offset[1])
-            antinode2 = (antenna1[0] - offset[0], antenna1[1] - offset[1])
-            if antinode1 != antenna2: antinodesSet.add(antinode1)
-            if antinode2 != antenna2: antinodesSet.add(antinode2)
-            # antenna2 antinodes
-            antinode3 = (antenna2[0] + offset[0], antenna2[1] + offset[1])
-            antinode4 = (antenna2[0] - offset[0], antenna2[1] - offset[1])
-            if antinode3 != antenna1: antinodesSet.add(antinode3)
-            if antinode4 != antenna1: antinodesSet.add(antinode4)
+            # Calculate potential antinodes for both antennas in the pair
+            # Adding and subtracting offset from each coordinate
+            antinodesList = [
+                (antenna1[0] + offset[0], antenna1[1] + offset[1]),
+                (antenna1[0] - offset[0], antenna1[1] - offset[1]),
+                (antenna2[0] + offset[0], antenna2[1] + offset[1]),
+                (antenna2[0] - offset[0], antenna2[1] - offset[1])
+            ]    
+            # Add valid antinodes, they cannot overlap their own antenna's
+            for antinode in antinodesList:
+                if antinode not in (antenna1, antenna2):
+                    antinodesSet.add(antinode)
+    # Filtering antinodes that are out of specified bounds
     invalidAntinodesSet = set()
     for antinode in antinodesSet:
         if antinode[0] > maxBound[0] or antinode[0] < minBound[0]: invalidAntinodesSet.add(antinode)
         elif antinode[1] > maxBound[1] or antinode[1] < minBound[1]: invalidAntinodesSet.add(antinode)
     antinodesSet = antinodesSet - invalidAntinodesSet
-    print(antinodesSet)
     return antinodesSet
 
 def part1(antinodesSet):
@@ -92,7 +98,7 @@ else:
     """)
     choice = input("Enter choice (1/2): ")
     
-# Parse the input file and process it into data
+# Process file into antenna data structure
 input = parseFile(filePaths[choice])
 antennaMapDict, minBound, maxBound = mapTheAntennas(input)
 antennaPairDict = pairAntennas(antennaMapDict)
