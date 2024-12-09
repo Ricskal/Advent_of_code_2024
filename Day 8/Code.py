@@ -12,7 +12,7 @@ filePaths = {
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = True
+defaultFile = False
 expectedTestOutputPart1 = 14
 expectedTestOutputPart2 = 34
 
@@ -93,17 +93,17 @@ def part2(antennaPairDict, minBound, maxBound):
             antinodesList = []
             while i < 1000:
             
-                antinodesList.append((antenna1[0] + offset[0] +i, antenna1[1] + offset[1] +i))
-                antinodesList.append((antenna1[0] - offset[0] -i, antenna1[1] - offset[1] -i))
-                antinodesList.append((antenna2[0] + offset[0] +i, antenna2[1] + offset[1] +i))
-                antinodesList.append((antenna2[0] - offset[0] -i, antenna2[1] - offset[1] -i))
+                antinodesList.append((antenna1[0] + offset[0] *i, antenna1[1] + offset[1] *i))
+                antinodesList.append((antenna1[0] - offset[0] *i, antenna1[1] - offset[1] *i))
+                antinodesList.append((antenna2[0] + offset[0] *i, antenna2[1] + offset[1] *i))
+                antinodesList.append((antenna2[0] - offset[0] *i, antenna2[1] - offset[1] *i))
 
                 i +=1
             
             # Add valid antinodes, they cannot overlap their own antenna's
             for antinode in antinodesList:
-                if antinode not in (antenna1, antenna2):
-                    antinodesSet.add(antinode)
+                # if antinode not in (antenna1, antenna2):
+                antinodesSet.add(antinode)
     # Filtering antinodes that are out of specified bounds
     invalidAntinodesSet = set()
     for antinode in antinodesSet:
