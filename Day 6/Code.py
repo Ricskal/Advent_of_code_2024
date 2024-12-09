@@ -41,7 +41,7 @@ def mapTheLab(parsedFile):
 
 def printTheLabMapDict(theLabMapDict, choice):
     # Pause to make animation visible
-    # time.sleep(0.1)
+    time.sleep(0.1)
     # Clear the console screen
     os.system('cls')
     # Define the size of the grid
@@ -69,7 +69,7 @@ def printTheLabMapDict(theLabMapDict, choice):
         print(row)
 
 def part1(theLabMapDict, guardInitLocation, choice):
-    printTrue = False
+    printTrue = True
     part1answer = 0  
     guardCurrentLocation = list(guardInitLocation)  # Start at the initial location of the guard
     guardCurrentDirection = 'North'  # Initial direction of the guard
