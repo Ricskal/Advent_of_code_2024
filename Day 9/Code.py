@@ -16,18 +16,24 @@ expectedTestOutputPart1 = 1928
 expectedTestOutputPart2 = 0
 
 ## Methods ##
-def parseFile(filepath):
+def parse_file(filepath):
     parsedFile = ""
     with open(filepath, 'r') as file:
         for line in file:
             parsedFile += line
+    print(parsedFile)
     return parsedFile
 
-def part1(input):
+# 2333133121414131402
+# 00...111...2...333.44.5555.6666.777.888899
+def convert_disk_map(parsedFile):
+    
+
+def part_1(input):
     part1answer = 0
     return part1answer
 
-def part2(input):
+def part_2(input):
     part2answer = 0
     return part2answer
 
@@ -43,18 +49,18 @@ else:
     choice = input("Enter choice (1/2): ")
     
 # Parse the input file and process it into data
-input = parseFile(filePaths[choice])
+input = parse_file(filePaths[choice])
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
-part1answer = part1(input)
+part1answer = part_1(input)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2 outputs
-part2answer = part2(input)
+part2answer = part_2(input)
 print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
     testCorrect = part2answer == expectedTestOutputPart2
