@@ -11,7 +11,7 @@ filePaths = {
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = False
+defaultFile = True
 expectedTestOutputPart1 = 1928
 expectedTestOutputPart2 = 0
 
@@ -21,11 +21,8 @@ def parse_file(filepath):
     with open(filepath, 'r') as file:
         for line in file:
             diskMap += line
-    # print(f'diskMap = {diskMap}')
     return diskMap
 
-# 2333133121414131402
-# 00...111...2...333.44.5555.6666.777.888899
 def convert_disk_map(diskMap):
     isFile = True
     blockList = []
@@ -43,18 +40,42 @@ def convert_disk_map(diskMap):
             for i in range(emptyBlocks):
                 blockList.append('.')
             isFile = True
-    # print(f'blockList = {blockList}')
     return blockList
 
-# 0099811188827773336446555566..............
-# [0, 0, 9, 9, 8, 1, 1, 1, 8, 8, 8, 2, 7, 7, 7, 3, 3, 3, 6, 4, 4, 6, 5, 5, 5, 5, 6, 6, '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.', '.']
-def defragment_blockList(blockList):
+# 00...111...2...333.44.5555.6666.777.888899
+# fileID = 0: 2 blocks
+# fileID = 1: 3 blocks
+
+# (0,1) = 0
+# (2,4) = .
+# (5,7) = 1
+
+def convert_disk_map_part_2(diskMap):
+    isFile = True
+    blockList = {}
+    fileID = -1
+    for command in diskMap:
+        command = int(command)
+        if isFile:
+            fileID += 1
+            fileBlocks = command
+            for i in range(fileBlocks):
+                blockList.append(fileID)
+            isFile = False
+        else:
+            emptyBlocks = command
+            for i in range(emptyBlocks):
+                blockList.append('.')
+            isFile = True
+    print(blockList)
+    return blockList
+
+def part_1(blockList):
     emptyBlockCount = 0
     defragmentComplete = False
     for block in blockList:
-        if block == '.':
-            emptyBlockCount += 1
-    while True:
+        if block == '.': emptyBlockCount += 1
+    while not defragmentComplete:
         for block in blockList:
             if block == '.':
                 emptyBlockIndex = blockList.index(block)
@@ -72,8 +93,11 @@ def defragment_blockList(blockList):
                 emptyBlockCountCheck += 1
                 if emptyBlockCountCheck == emptyBlockCount: defragmentComplete = True
             else: break
-        if defragmentComplete: break
+    return blockList
+
+def part_2(blockList):
     # print(blockList)
+    
     return blockList
 
 def calculate_filesystem_checksum(defragmentedblockList):
@@ -83,19 +107,6 @@ def calculate_filesystem_checksum(defragmentedblockList):
         if block != '.':
             filesystemChecksum += (blockIndex * block)
     return filesystemChecksum
-            
-            
-        
-        
-    return True
-
-def part_1(input):
-    part1answer = 0
-    return part1answer
-
-def part_2(input):
-    part2answer = 0
-    return part2answer
 
 ## Main execution ##
 # Prompt user for input choice and parse file
@@ -110,9 +121,16 @@ else:
     
 # Parse the input file and process it into data
 diskMap = parse_file(filePaths[choice])
+
 blockList = convert_disk_map(diskMap)
-defragmentedBlockList = defragment_blockList(blockList)
+defragmentedBlockList = part_1(blockList)
 part1answer = calculate_filesystem_checksum(defragmentedBlockList)
+
+blockList = convert_disk_map_part_2(diskMap)
+defragmentedBlockList = part_2(blockList)
+part2answer = calculate_filesystem_checksum(defragmentedBlockList)
+
+
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
 # part1answer = part_1(diskMap)
@@ -122,7 +140,6 @@ if choice == '2':
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2 outputs
-part2answer = part_2(input)
 print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
     testCorrect = part2answer == expectedTestOutputPart2
