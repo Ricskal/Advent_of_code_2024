@@ -42,7 +42,6 @@ def convert_disk_map(diskMap):
             isFile = True
     return blockList
 
-# 00...111...2...333.44.5555.6666.777.888899
 def convert_disk_map_part_2(diskMap):
     isFile = True
     blockDict = {}
@@ -86,6 +85,9 @@ def part_1(blockList):
             else: break
     return blockList
 
+# 0...1...2......33333
+# 021......33333......
+# [0, 2, 1, '.', '.', '.', '.', '.', '.', '.', '.', '.', 3, 3, 3, 3, 3, '.', '.', '.']
 def part_2(blockDict):
     newBlockList = []
     defragmentComplete = False
@@ -97,10 +99,13 @@ def part_2(blockDict):
         for emptyBlockKey in blockDict.keys():
             emptyBlock = blockDict[emptyBlockKey]
             emptyBlockStartPosition = emptyBlockKey[0]
-            if emptyBlock == '.' and emptyBlockStartPosition < firstAvailableSpace and emptyBlockKey not in triedBlockList and emptyBlockKey[1] < fileBlockKey[0]:
-                firstAvailableSpace = emptyBlockStartPosition
-                firstEmptyBlockKey = emptyBlockKey
-                foundAvailableSpace = True
+            if emptyBlock == '.':
+                if emptyBlockStartPosition < firstAvailableSpace:
+                    if emptyBlockKey not in triedBlockList:
+                        if emptyBlockKey[1] < fileBlockKey[0]:
+                            firstAvailableSpace = emptyBlockStartPosition
+                            firstEmptyBlockKey = emptyBlockKey
+                            foundAvailableSpace = True
         if foundAvailableSpace:
             return firstEmptyBlockKey
         else:
@@ -145,13 +150,31 @@ def part_2(blockDict):
                 foundSpace = True
             else:
                 triedBlockList.append(emptyBlockKey)
-                
-    for blockKey in blockDict.keys():
-        block = blockDict[blockKey]
-        for i in range(blockKey[0],blockKey[1] +1):
-            newBlockList.insert(i,block)
-    print(newBlockList)
-    return newBlockList
+    
+    # print(blockDict)       
+    # for blockKey in blockDict.keys():
+    #     block = blockDict[blockKey]
+    #     for i in range(blockKey[0],blockKey[1] +1):
+    #         newBlockList.insert(i,block)
+    # print(newBlockList)
+    return blockDict
+
+def convert_dict_to_list(blockDict):
+    # Determine the maximum end index to define the size of the list
+    max_index = max(end for _, end in blockDict.keys())
+    
+    # Initialize the list with a placeholder value
+    result_list = [None] * (max_index + 1)
+    
+    # Sort the dictionary by the keys (tuples)
+    sorted_items = sorted(blockDict.items())
+    
+    # Fill the result list based on the start and end indices
+    for (start, end), value in sorted_items:
+        for i in range(start, end + 1):
+            result_list[i] = value
+    
+    return result_list
 
 def calculate_filesystem_checksum(defragmentedblockList):
     filesystemChecksum = 0
@@ -180,8 +203,9 @@ defragmentedBlockList = part_1(blockList)
 part1answer = calculate_filesystem_checksum(defragmentedBlockList)
 
 blockDict = convert_disk_map_part_2(diskMap)
-newBlockList = part_2(blockDict)
-part2answer = calculate_filesystem_checksum(newBlockList)
+blockDict2 = part_2(blockDict)
+blockList2 = convert_dict_to_list(blockDict2)
+part2answer = calculate_filesystem_checksum(blockList2)
 
 
 # Output results for both parts and verify test results if applicable
