@@ -23,7 +23,7 @@ def parse_file(filepath):
             diskMap += line
     return diskMap
 
-def convert_disk_map(diskMap):
+def convert_disk_map_to_list(diskMap):
     isFile = True
     blockList = []
     fileID = -1
@@ -42,7 +42,7 @@ def convert_disk_map(diskMap):
             isFile = True
     return blockList
 
-def convert_disk_map_part_2(diskMap):
+def convert_disk_map_to_dict(diskMap):
     isFile = True
     blockDict = {}
     fileID = -1
@@ -85,14 +85,11 @@ def part_1(blockList):
             else: break
     return blockList
 
-# 0...1...2......33333
-# 021......33333......
-# [0, 2, 1, '.', '.', '.', '.', '.', '.', '.', '.', '.', 3, 3, 3, 3, 3, '.', '.', '.']
 def part_2(blockDict):
     newBlockList = []
     defragmentComplete = False
     movedFiles = []
-
+    
     def get_empty_block(blockDict, triedBlockList, fileBlockKey):
         firstAvailableSpace = 9999999999999999
         foundAvailableSpace = False
@@ -110,7 +107,7 @@ def part_2(blockDict):
             return firstEmptyBlockKey
         else:
             return 'Error'
-    
+        
     def get_file_to_be_moved(blockDict):
         foundAvailableBlock = False
         for fileBlockKey in reversed(blockDict.keys()):
@@ -150,31 +147,14 @@ def part_2(blockDict):
                 foundSpace = True
             else:
                 triedBlockList.append(emptyBlockKey)
-    
-    # print(blockDict)       
-    # for blockKey in blockDict.keys():
-    #     block = blockDict[blockKey]
-    #     for i in range(blockKey[0],blockKey[1] +1):
-    #         newBlockList.insert(i,block)
-    # print(newBlockList)
-    return blockDict
-
-def convert_dict_to_list(blockDict):
-    # Determine the maximum end index to define the size of the list
+                
     max_index = max(end for _, end in blockDict.keys())
-    
-    # Initialize the list with a placeholder value
-    result_list = [None] * (max_index + 1)
-    
-    # Sort the dictionary by the keys (tuples)
+    newBlockList = [None] * (max_index + 1)
     sorted_items = sorted(blockDict.items())
-    
-    # Fill the result list based on the start and end indices
     for (start, end), value in sorted_items:
         for i in range(start, end + 1):
-            result_list[i] = value
-    
-    return result_list
+            newBlockList[i] = value            
+    return newBlockList
 
 def calculate_filesystem_checksum(defragmentedblockList):
     filesystemChecksum = 0
@@ -198,24 +178,20 @@ else:
 # Parse the input file and process it into data
 diskMap = parse_file(filePaths[choice])
 
-blockList = convert_disk_map(diskMap)
-defragmentedBlockList = part_1(blockList)
-part1answer = calculate_filesystem_checksum(defragmentedBlockList)
-
-blockDict = convert_disk_map_part_2(diskMap)
-blockDict2 = part_2(blockDict)
-blockList2 = convert_dict_to_list(blockDict2)
-part2answer = calculate_filesystem_checksum(blockList2)
-
-
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
+blockList = convert_disk_map_to_list(diskMap)
+defragmentedBlockList = part_1(blockList)
+part1answer = calculate_filesystem_checksum(defragmentedBlockList)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2 outputs
+blockDict = convert_disk_map_to_dict(diskMap)
+newBlockList = part_2(blockDict)
+part2answer = calculate_filesystem_checksum(newBlockList)
 print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
     testCorrect = part2answer == expectedTestOutputPart2
