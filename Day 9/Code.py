@@ -11,9 +11,9 @@ filePaths = {
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = True
+defaultFile = False
 expectedTestOutputPart1 = 1928
-expectedTestOutputPart2 = 0
+expectedTestOutputPart2 = 2858
 
 ## Methods ##
 def parse_file(filepath):
@@ -43,32 +43,23 @@ def convert_disk_map(diskMap):
     return blockList
 
 # 00...111...2...333.44.5555.6666.777.888899
-# fileID = 0: 2 blocks
-# fileID = 1: 3 blocks
-
-# (0,1) = 0
-# (2,4) = .
-# (5,7) = 1
-
 def convert_disk_map_part_2(diskMap):
     isFile = True
-    blockList = {}
+    blockDict = {}
     fileID = -1
+    startBlock = 0
     for command in diskMap:
         command = int(command)
         if isFile:
             fileID += 1
-            fileBlocks = command
-            for i in range(fileBlocks):
-                blockList.append(fileID)
+            blockDict[(startBlock, startBlock + command -1)] = fileID
+            startBlock += command
             isFile = False
-        else:
-            emptyBlocks = command
-            for i in range(emptyBlocks):
-                blockList.append('.')
+        elif not isFile:
+            if command != 0: blockDict[(startBlock, startBlock + command -1)] = '.'
+            startBlock += command    
             isFile = True
-    print(blockList)
-    return blockList
+    return blockDict
 
 def part_1(blockList):
     emptyBlockCount = 0
@@ -95,10 +86,72 @@ def part_1(blockList):
             else: break
     return blockList
 
-def part_2(blockList):
-    # print(blockList)
+def part_2(blockDict):
+    newBlockList = []
+    defragmentComplete = False
+    movedFiles = []
+
+    def get_empty_block(blockDict, triedBlockList, fileBlockKey):
+        firstAvailableSpace = 9999999999999999
+        foundAvailableSpace = False
+        for emptyBlockKey in blockDict.keys():
+            emptyBlock = blockDict[emptyBlockKey]
+            emptyBlockStartPosition = emptyBlockKey[0]
+            if emptyBlock == '.' and emptyBlockStartPosition < firstAvailableSpace and emptyBlockKey not in triedBlockList and emptyBlockKey[1] < fileBlockKey[0]:
+                firstAvailableSpace = emptyBlockStartPosition
+                firstEmptyBlockKey = emptyBlockKey
+                foundAvailableSpace = True
+        if foundAvailableSpace:
+            return firstEmptyBlockKey
+        else:
+            return 'Error'
     
-    return blockList
+    def get_file_to_be_moved(blockDict):
+        foundAvailableBlock = False
+        for fileBlockKey in reversed(blockDict.keys()):
+            fileBlock = blockDict[fileBlockKey]
+            if fileBlock != '.' and fileBlock not in movedFiles:
+                movedFiles.append(fileBlock)
+                foundAvailableBlock = True
+                break
+        if foundAvailableBlock:
+            return fileBlockKey
+        else:
+            return 'Error'
+        
+    while not defragmentComplete:
+        fileBlockKey = get_file_to_be_moved(blockDict)
+        if fileBlockKey == 'Error':
+            defragmentComplete = True
+            break
+        fileID = blockDict[fileBlockKey]
+        print(fileID)
+        fileBlockLength = fileBlockKey[1] - fileBlockKey[0] +1
+        foundSpace = False
+        triedBlockList = []
+        while not foundSpace:
+            emptyBlockKey = get_empty_block(blockDict, triedBlockList, fileBlockKey)
+            if emptyBlockKey == 'Error': break
+            emptyBlockLength = emptyBlockKey[1] - emptyBlockKey[0] +1
+            if fileBlockLength == emptyBlockLength:
+                blockDict[emptyBlockKey] = fileID
+                blockDict[fileBlockKey] = '.'
+                foundSpace = True
+            elif fileBlockLength < emptyBlockLength:
+                del blockDict[emptyBlockKey]
+                blockDict[(emptyBlockKey[0], emptyBlockKey[0] + fileBlockLength -1)] = fileID
+                blockDict[(emptyBlockKey[0] + fileBlockLength, emptyBlockKey[1])] = '.'
+                blockDict[fileBlockKey] = '.'
+                foundSpace = True
+            else:
+                triedBlockList.append(emptyBlockKey)
+                
+    for blockKey in blockDict.keys():
+        block = blockDict[blockKey]
+        for i in range(blockKey[0],blockKey[1] +1):
+            newBlockList.insert(i,block)
+    print(newBlockList)
+    return newBlockList
 
 def calculate_filesystem_checksum(defragmentedblockList):
     filesystemChecksum = 0
@@ -126,14 +179,13 @@ blockList = convert_disk_map(diskMap)
 defragmentedBlockList = part_1(blockList)
 part1answer = calculate_filesystem_checksum(defragmentedBlockList)
 
-blockList = convert_disk_map_part_2(diskMap)
-defragmentedBlockList = part_2(blockList)
-part2answer = calculate_filesystem_checksum(defragmentedBlockList)
+blockDict = convert_disk_map_part_2(diskMap)
+newBlockList = part_2(blockDict)
+part2answer = calculate_filesystem_checksum(newBlockList)
 
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
-# part1answer = part_1(diskMap)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
