@@ -15,7 +15,8 @@ defaultFile = False
 expectedTestOutputPart1 = 36
 expectedTestOutputPart2 = 0
 possibleTileDict = {}
-nineTilePaths = set()
+nineTilePathsPart1 = set()
+nineTilePathsPart2 = set()
 
 ## Methods ##
 def parse_file(filepath):
@@ -59,14 +60,13 @@ def get_possible_tiles(topographicTileDict, coordinate):
     if possibleTileList: possibleTileDict[coordinate] = possibleTileList
     return possibleTileDict
 
-def part_1(topographicTileDict, trailheadList):
-    part1answer = 0
+def calculate_paths(topographicTileDict, trailheadList):
+    part1answer, part2answer = 0, 0
+    
     for coordinate in topographicTileDict:
         possibleTileDict = get_possible_tiles(topographicTileDict, coordinate)
 
     for trailhead in trailheadList:
-
-        print(f"Starting traversal from node: {trailhead}")
         
         # Stack to manage paths in a depth-first manner
         stack = [(trailhead, [trailhead])]
@@ -86,14 +86,17 @@ def part_1(topographicTileDict, trailheadList):
                 
         # Print all paths found from this start node
         for end_path in all_paths:
-            print(f"Complete path: {end_path}")
-            if len(end_path) == 10: nineTilePaths.add((end_path[0], end_path[-1]))
-        part1answer = len(nineTilePaths)
-    return part1answer
+            # print(f"Complete path: {end_path}")
+            if len(end_path) == 10: nineTilePathsPart1.add((end_path[0], end_path[-1]))
+        part1answer = len(nineTilePathsPart1)
+        
+        # Print all paths found from this start node
+        for end_path in all_paths:
+            # print(f"Complete path: {end_path}")
+            if len(end_path) == 10: part2answer +=1
+        
+    return part1answer, part2answer
 
-def part_2(input):
-    part2answer = 0
-    return part2answer
 
 ## Main execution ##
 # Prompt user for input choice and parse file
@@ -109,7 +112,7 @@ else:
 # Parse the input file and process it into data
 topographicTileList = parse_file(filePaths[choice])
 topographicTileDict, trailheadList, maxBound = map_topographic_tiles(topographicTileList)
-part1answer = part_1(topographicTileDict, trailheadList)
+part1answer, part2answer = calculate_paths(topographicTileDict, trailheadList)
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
@@ -119,7 +122,6 @@ if choice == '2':
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2 outputs
-part2answer = part_2(input)
 print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
     testCorrect = part2answer == expectedTestOutputPart2
