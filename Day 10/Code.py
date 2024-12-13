@@ -15,7 +15,7 @@ filePaths = {
 # Default configuration and expected test outputs
 defaultFile = False  # Determines which file is used by default
 expectedTestOutputPart1 = 36  # Known expected output for the test input, part 1
-expectedTestOutputPart2 = 0   # Known expected output for the test input, part 2
+expectedTestOutputPart2 = 81   # Known expected output for the test input, part 2
 possibleTileDict = {}         # To store possible paths from each tile
 nineTilePathsPart1 = set()    # To track unique paths of length 9 tiles for part 1
 nineTilePathsPart2 = set()    # To track unique paths of length 9 tiles for part 2
