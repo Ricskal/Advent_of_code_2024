@@ -11,9 +11,11 @@ filePaths = {
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = True
-expectedTestOutputPart1 = 2
+defaultFile = False
+expectedTestOutputPart1 = 36
 expectedTestOutputPart2 = 0
+possibleTileDict = {}
+nineTilePaths = set()
 
 ## Methods ##
 def parse_file(filepath):
@@ -41,12 +43,11 @@ def map_topographic_tiles(topographicMapList):
     print(f'trailheadList = {trailheadList}')
     return topographicTileDict, trailheadList, maxBound
 
-possibleTileDict = {}
 def get_possible_tiles(topographicTileDict, coordinate):
     possibleTileList = []
     currentTileValue = topographicTileDict[coordinate]
     serroundingTileList = [
-        (coordinate[0], coordinate[1] -1) # North
+         (coordinate[0], coordinate[1] -1) # North
         ,(coordinate[0] +1, coordinate[1]) # East
         ,(coordinate[0], coordinate[1] +1) # South
         ,(coordinate[0] -1, coordinate[1]) # West
@@ -58,11 +59,36 @@ def get_possible_tiles(topographicTileDict, coordinate):
     if possibleTileList: possibleTileDict[coordinate] = possibleTileList
     return possibleTileDict
 
-def part_1(topographicTileDict, trailheadList, maxBound):
+def part_1(topographicTileDict, trailheadList):
     part1answer = 0
     for coordinate in topographicTileDict:
         possibleTileDict = get_possible_tiles(topographicTileDict, coordinate)
-    print(possibleTileDict)
+
+    for trailhead in trailheadList:
+
+        print(f"Starting traversal from node: {trailhead}")
+        
+        # Stack to manage paths in a depth-first manner
+        stack = [(trailhead, [trailhead])]
+        all_paths = []
+        while stack:
+            current_node, path = stack.pop()
+            
+            # If there are no more children, record the complete path
+            if current_node not in possibleTileDict or not possibleTileDict[current_node]:
+                all_paths.append(path)
+                continue
+            
+            # Explore all next nodes
+            for next_node in possibleTileDict.get(current_node, []):
+                new_path = path + [next_node]
+                stack.append((next_node, new_path))
+                
+        # Print all paths found from this start node
+        for end_path in all_paths:
+            print(f"Complete path: {end_path}")
+            if len(end_path) == 10: nineTilePaths.add((end_path[0], end_path[-1]))
+        part1answer = len(nineTilePaths)
     return part1answer
 
 def part_2(input):
@@ -83,7 +109,7 @@ else:
 # Parse the input file and process it into data
 topographicTileList = parse_file(filePaths[choice])
 topographicTileDict, trailheadList, maxBound = map_topographic_tiles(topographicTileList)
-part1answer = part_1(topographicTileDict, trailheadList, maxBound)
+part1answer = part_1(topographicTileDict, trailheadList)
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
