@@ -1,4 +1,7 @@
 import re
+import os
+import time
+
 
 ## Variables and Configuration ##
 # Extract the current day number from the file path
@@ -15,7 +18,7 @@ mapDimensions = {
     '2': [11, 7]
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = True
+defaultFile = False
 expectedTestOutputPart1 = 12
 expectedTestOutputPart2 = 0
 
@@ -77,14 +80,52 @@ def calculate_quadrant_score(robotDict, bounds):
     score = q1Score * q2Score * q3Score * q4Score
     return score
 
+def display_map(robotDict, bounds, second):
+    # Pause to make animation visible
+    # time.sleep(0.1)
+    # Clear the console screen
+    os.system('cls')  # or 'clear' for Unix-based systems
+
+    # Extract coordinates and remove duplicates by converting to a set
+    unique_coordinates = {tuple(coord[0]) for coord in robotDict.values()}
+
+    # Define the size of the grid
+    width, height = bounds
+
+    # Create and initialize the grid
+    grid = [[' ' for _ in range(width + 1)] for _ in range(height + 1)]
+
+    # Mark the unique coordinates with an "X"
+    for x, y in unique_coordinates:
+        grid[y][x] = 'X'
+
+    # Prepare the grid output for display and export
+    grid_output = "\n".join("".join(row) for row in grid)
+
+    # Print the grid to console
+    print(grid_output)
+
+    # Generate a unique file name using timestamp
+    
+
+    filename = f'C:\\Users\\rick.ensink_nsp\\Downloads\\AOC_Day_10_2\\{second}.txt'
+
+    # Export grid to a unique file
+    with open(filename, 'w') as file:
+        file.write(grid_output)
+    print(f"Grid exported to {filename}")
+    
 def part_1(robotDict, bounds):
     part1answer = 0
-    seconds = 100  # Time interval for simulation
+    seconds = 10000 # Time interval for simulation
 
     # Update all robot positions after the time interval
-    for robotID in robotDict:
-        robotDict[robotID][0] = calculate_position(robotDict[robotID][0], robotDict[robotID][1], seconds, bounds)
-    
+    for second in range(seconds):
+        for robotID in robotDict:
+            robotDict[robotID][0] = calculate_position(robotDict[robotID][0], robotDict[robotID][1], second, bounds)
+        print(f'Number of seconds = {second}')
+        display_map(robotDict, bounds, second)
+
     # Compute the score based on updated positions
     part1answer = calculate_quadrant_score(robotDict, bounds)
     return part1answer
