@@ -1,7 +1,7 @@
+import copy
 import re
-import os
-import time
-
+from PIL import (ImageDraw, ImageFont, Image)
+import texttoimage
 
 ## Variables and Configuration ##
 # Extract the current day number from the file path
@@ -80,60 +80,55 @@ def calculate_quadrant_score(robotDict, bounds):
     score = q1Score * q2Score * q3Score * q4Score
     return score
 
-def display_map(robotDict, bounds, second):
-    # Pause to make animation visible
-    # time.sleep(0.1)
-    # Clear the console screen
-    os.system('cls')  # or 'clear' for Unix-based systems
-
+def display_map(robotDict, bounds):
     # Extract coordinates and remove duplicates by converting to a set
     unique_coordinates = {tuple(coord[0]) for coord in robotDict.values()}
+    width, height = bounds # Define the size of the grid
+    grid = [] # Create and initialize the grid
 
-    # Define the size of the grid
-    width, height = bounds
-
-    # Create and initialize the grid
-    grid = [[' ' for _ in range(width + 1)] for _ in range(height + 1)]
-
+    # Iterate over the range equal to the height of the grid
+    for _ in range(height):
+        # Create a row filled with dots ('.'), representing empty spaces
+        row = ['.' for _ in range(width)]
+        # Append the row to the grid
+        grid.append(row)
     # Mark the unique coordinates with an "X"
     for x, y in unique_coordinates:
-        grid[y][x] = 'X'
-
+        grid[y][x] = '■'
     # Prepare the grid output for display and export
     grid_output = "\n".join("".join(row) for row in grid)
-
-    # Print the grid to console
     print(grid_output)
 
-    # Generate a unique file name using timestamp
-    
+def draw_pixels_from_dict(robotDict, bounds, second):
+# Function to draw pixels from a dictionary onto a PNG image
+    # Create a new image with white background
+    width, height = bounds
+    image = Image.new('RGB', [width, height], (255, 255, 255))
+    pixels = image.load()
+    # Iterate over the dictionary
+    for value in robotDict.items():
+        # Extract x, y from the first list in the value and paint the pixel black
+        x, y = value[1][0]
+        pixels[x, y] = (0, 0, 0)
+    # Save the image
+    image.save(f'Day 14\Part 2 images\{second}.png')
 
-    filename = f'C:\\Users\\rick.ensink_nsp\\Downloads\\AOC_Day_10_2\\{second}.txt'
-
-    # Export grid to a unique file
-    with open(filename, 'w') as file:
-        file.write(grid_output)
-    print(f"Grid exported to {filename}")
-    
-def part_1(robotDict, bounds):
+def part_1_2(robotDict, bounds):
     part1answer = 0
-    seconds = 10000 # Time interval for simulation
-
-    # Update all robot positions after the time interval
+    seconds = 10000  # Time interval for simulation
+    # Make a deep copy of the original dictionary
+    originalRobotDict = copy.deepcopy(robotDict)
     for second in range(seconds):
         for robotID in robotDict:
             robotDict[robotID][0] = calculate_position(robotDict[robotID][0], robotDict[robotID][1], second, bounds)
-        print(f'Number of seconds = {second}')
-        display_map(robotDict, bounds, second)
-
-    # Compute the score based on updated positions
-    part1answer = calculate_quadrant_score(robotDict, bounds)
+        draw_pixels_from_dict(robotDict, bounds, second)
+        if second == 100 :  # Calculate part 1 after 100 seconds
+            part1answer = calculate_quadrant_score(robotDict, bounds)
+        if second == 7055: # Display the output after 7055 seconds to see the christmas tree
+            print(f'The answer to day {day} part 2 =')
+            display_map(robotDict, bounds)
+        robotDict = copy.deepcopy(originalRobotDict)
     return part1answer
-
-def part_2(input):
-    # Placeholder for future functionality in part 2
-    part2answer = 0
-    return part2answer
 
 ## Main execution ##
 # Prompt user for input choice and parse file
@@ -152,15 +147,8 @@ bounds = mapDimensions[choice]  # Get map dimensions
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
-part1answer = part_1(robotDict, bounds)
+part1answer = part_1_2(robotDict, bounds)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
-
-# Part 2 outputs
-part2answer = part_2(input)
-print(f'The answer to day {day} part 2 = {part2answer}')
-if choice == '2':
-    testCorrect = part2answer == expectedTestOutputPart2
-    print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart2} and got {part2answer}')
