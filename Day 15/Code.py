@@ -13,8 +13,8 @@ filePaths = {
     '2': 'Day ' + str(day) +'\Input files\TestInput.txt',
 }
 # Default configuration for input file and expected outputs for tests
-defaultFile = True
-expectedTestOutputPart1 = 2028
+defaultFile = False
+expectedTestOutputPart1 = 10092
 expectedTestOutputPart2 = 0
 
 ## Methods ##
@@ -32,7 +32,7 @@ def parse_file(filepath):
     
     # Process the first section of the file into the warehouse map
     for _text in _list0[:index]: _list2.append(_text)
-    # Iterate over each line to assign coordinates and values
+    # Iterate over each line in_list2 to assign coordinates and values
     yCord = -1
     for _line in _list2:
         yCord += 1
@@ -41,6 +41,7 @@ def parse_file(filepath):
             xCord += 1
             warehouseMapDict[(xCord, yCord)] = _tile
             if _tile == '@': robotPositionList = [xCord, yCord]
+            
     # Process the second section of the file into the instructions
     for _text in _list0[index + 1:]:
         for character in _text:
@@ -53,7 +54,7 @@ def display_warehouse(warehouseMapDict):
     maxX = max(key[0] for key in warehouseMapDict.keys())
     maxY = max(key[1] for key in warehouseMapDict.keys())
     # Pause to make animation visible
-    time.sleep(1)
+    time.sleep(0.1)
     # Clear the console screen
     os.system('cls')
     # Iterate through each row and column to print the warehouseMapDict
@@ -62,7 +63,6 @@ def display_warehouse(warehouseMapDict):
         for x in range(maxX + 1):
             line += warehouseMapDict.get((x, y), ' ')  # Default to a space if the key is not in the dictionary
         print(line)
-
     
 def move_robot(warehouseMapDict, instruction, robotPositionList):
     instructDict = {
@@ -88,7 +88,9 @@ def move_robot(warehouseMapDict, instruction, robotPositionList):
         boxList.append([currBoxPos[0], currBoxPos[1]])
         newBoxPos = (currBoxPos[0] + instruction[0], currBoxPos[1] + instruction[1]) 
         while True:
-            if warehouseMapDict[newBoxPos] == '.':
+            if warehouseMapDict[newBoxPos] == '#':
+                break
+            elif warehouseMapDict[newBoxPos] == '.':
                 #update robot position
                 warehouseMapDict[newRobotPos] = '@'
                 warehouseMapDict[currRobotPos] = '.'
@@ -101,21 +103,19 @@ def move_robot(warehouseMapDict, instruction, robotPositionList):
                 currBoxPos = newBoxPos
                 newBoxPos = (currBoxPos[0] + instruction[0], currBoxPos[1] + instruction[1])
                 boxList.append([currBoxPos[0], currBoxPos[1]])
-
-    # else: warehouseMapDict[newRobotPos] == '#'
-
-    display_warehouse(warehouseMapDict)
     robotPositionList = [currRobotPos[0], currRobotPos[1]]
     return robotPositionList
     
 def part_1(warehouseMapDict, instructionTuple, robotPositionList):
     currRobotPos = robotPositionList
+    part1answer = 0
+    
     for instruction in instructionTuple:
         currRobotPos = move_robot(warehouseMapDict, instruction, currRobotPos)
-
-    
-    
-    part1answer = 0
+        display_warehouse(warehouseMapDict)
+        
+    for coordinate, item in warehouseMapDict.items():
+        if item == 'O': part1answer += (100 * coordinate[1]) + coordinate[0]
     return part1answer
 
 def part_2(input):
