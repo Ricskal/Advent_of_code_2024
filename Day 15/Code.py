@@ -10,12 +10,12 @@ day = folder.group(1)
 # Define file paths for input and test input files using the extracted day number
 filePaths = {
     '1': 'Day ' + str(day) + '\Input files\Input.txt',
-    '2': 'Day ' + str(day) + '\Input files\TestInput.txt',
+    '2': 'Day ' + str(day) + '\Input files\TestInput.txt'
 }
 # Default configuration for input file and expected outputs for testing purposes
 defaultFile = False
 expectedTestOutputPart1 = 10092
-expectedTestOutputPart2 = 0
+expectedTestOutputPart2 = 9021
 
 ## Methods ##
 def parse_file(filepath):
