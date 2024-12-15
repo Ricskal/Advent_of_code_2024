@@ -1,4 +1,6 @@
 import re
+import os
+import time
 
 ## Variables and Configuration ##
 # Extract the current day number from the file path
@@ -21,6 +23,7 @@ def parse_file(filepath):
     _list0, _list1, _list2 = [], [], []
     instructionTuple = tuple()
     warehouseMapDict = {}
+    robotPositionList = []
     with open(filepath, 'r') as file:
         for line in file:
             _list0.append(line.strip())
@@ -37,18 +40,81 @@ def parse_file(filepath):
         for _tile in _line:
             xCord += 1
             warehouseMapDict[(xCord, yCord)] = _tile
-        
+            if _tile == '@': robotPositionList = [xCord, yCord]
     # Process the second section of the file into the instructions
     for _text in _list0[index + 1:]:
         for character in _text:
             _list1.append(character)
     instructionTuple = tuple(_list1) 
+    return warehouseMapDict, instructionTuple, robotPositionList
 
-    print(warehouseMapDict, instructionTuple)
+def display_warehouse(warehouseMapDict):
+    # Determine the size of the warehouseMapDict
+    maxX = max(key[0] for key in warehouseMapDict.keys())
+    maxY = max(key[1] for key in warehouseMapDict.keys())
+    # Pause to make animation visible
+    time.sleep(1)
+    # Clear the console screen
+    os.system('cls')
+    # Iterate through each row and column to print the warehouseMapDict
+    for y in range(maxY + 1):
+        line = ""
+        for x in range(maxX + 1):
+            line += warehouseMapDict.get((x, y), ' ')  # Default to a space if the key is not in the dictionary
+        print(line)
+
     
-    return warehouseMapDict, instructionTuple
+def move_robot(warehouseMapDict, instruction, robotPositionList):
+    instructDict = {
+        '^': (0, -1), # North
+        '>': (1, 0),  # East
+        'v': (0, 1),  # South
+        '<': (-1, 0), # West
+    }
+    boxList = []
+    
+    instruction = instructDict[instruction]
+    currRobotPos = (robotPositionList[0], robotPositionList[1])
+    newRobotPos = (currRobotPos[0] + instruction[0], currRobotPos[1] + instruction[1]) 
+    
+    if warehouseMapDict[newRobotPos] == '.':
+        #update robot position
+        warehouseMapDict[newRobotPos] = '@'
+        warehouseMapDict[currRobotPos] = '.'
+        currRobotPos = newRobotPos
 
-def part_1(input):
+    if warehouseMapDict[newRobotPos] == 'O':
+        currBoxPos = newRobotPos
+        boxList.append([currBoxPos[0], currBoxPos[1]])
+        newBoxPos = (currBoxPos[0] + instruction[0], currBoxPos[1] + instruction[1]) 
+        while True:
+            if warehouseMapDict[newBoxPos] == '.':
+                #update robot position
+                warehouseMapDict[newRobotPos] = '@'
+                warehouseMapDict[currRobotPos] = '.'
+                #update box(es) position(s)
+                for box in boxList:
+                    warehouseMapDict[(box[0] + instruction[0], box[1] + instruction[1])] = 'O'
+                currRobotPos = newRobotPos
+                break
+            elif warehouseMapDict[newBoxPos] == 'O':
+                currBoxPos = newBoxPos
+                newBoxPos = (currBoxPos[0] + instruction[0], currBoxPos[1] + instruction[1])
+                boxList.append([currBoxPos[0], currBoxPos[1]])
+
+    # else: warehouseMapDict[newRobotPos] == '#'
+
+    display_warehouse(warehouseMapDict)
+    robotPositionList = [currRobotPos[0], currRobotPos[1]]
+    return robotPositionList
+    
+def part_1(warehouseMapDict, instructionTuple, robotPositionList):
+    currRobotPos = robotPositionList
+    for instruction in instructionTuple:
+        currRobotPos = move_robot(warehouseMapDict, instruction, currRobotPos)
+
+    
+    
     part1answer = 0
     return part1answer
 
@@ -68,11 +134,11 @@ else:
     choice = input("Enter choice (1/2): ")
     
 # Parse the input file and process it into data
-input = parse_file(filePaths[choice])
+warehouseMapDict, instructionTuple, robotPositionList = parse_file(filePaths[choice])
+part1answer = part_1(warehouseMapDict, instructionTuple, robotPositionList)
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
-part1answer = part_1(input)
 print(f'The answer to day {day} part 1 = {part1answer}')
 if choice == '2':
     testCorrect = part1answer == expectedTestOutputPart1
