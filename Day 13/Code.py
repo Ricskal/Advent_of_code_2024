@@ -1,5 +1,6 @@
 import re
 from sympy import symbols, Eq, solve
+
 ## Variables and Configuration ##
 # Extract the current day number from the file path
 folder = re.search(r'Day (\d{1,2})\\', __file__)
@@ -27,10 +28,8 @@ def parse_file(filepath):
     return data_sets
 
 def part_1(data_sets):
-# Opstellen van de vergelijkingen
     tokens=0
     for index, dataset in enumerate(data_sets, start=1):
-        # Zoek naar de patterns in de tekst
         button_A_match = re.search(r"Button A: X\+(\d+), Y\+(\d+)", dataset)
         button_B_match = re.search(r"Button B: X\+(\d+), Y\+(\d+)", dataset)
         prize_match = re.search(r"Prize: X=(\d+), Y=(\d+)", dataset)
@@ -46,16 +45,12 @@ def part_1(data_sets):
         solution = solve((eq1, eq2), (a, b))
         if solution and solution[a] == int(solution[a]) and solution[b] == int(solution[b]):
             a_value, b_value = solution[a], solution[b] 
-            #print(f"Je moet {a_value} keer op knop A drukken en {b_value} keer op knop B drukken.")
-            tokens += ((3*a_value)+b_value) 
-            #print(f"Dat is een totaal van {tokens}.")       
+            tokens += ((3*a_value)+b_value)    
     return tokens
 
 def part_2(data_sets):
-# Opstellen van de vergelijkingen
     tokens=0
     for index, dataset in enumerate(data_sets, start=1):
-        # Zoek naar de patterns in de tekst
         button_A_match = re.search(r"Button A: X\+(\d+), Y\+(\d+)", dataset)
         button_B_match = re.search(r"Button B: X\+(\d+), Y\+(\d+)", dataset)
         prize_match = re.search(r"Prize: X=(\d+), Y=(\d+)", dataset)
@@ -71,9 +66,7 @@ def part_2(data_sets):
         solution = solve((eq1, eq2), (a, b))
         if solution and solution[a] == int(solution[a]) and solution[b] == int(solution[b]):
             a_value, b_value = solution[a], solution[b] 
-             #print(f"Je moet {a_value} keer op knop A drukken en {b_value} keer op knop B drukken.")
             tokens += ((3*a_value)+b_value) 
-            #print(f"Dat is een totaal van {tokens}.")       
     return tokens
 
 ## Main execution ##
