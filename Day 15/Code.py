@@ -74,7 +74,57 @@ def display_warehouse(warehouseMapDict):
             line += warehouseMapDict.get((x, y), ' ')  # Defaults to space if missing in map
         print(line)
 
-def move_robot(warehouseMapDict, instruction, robotPositionList):
+def move_robot_prt1(warehouseMapDict, instruction, robotPositionList):
+    # Dictionary linking movement instructions with coordinate changes
+    instructDict = {
+        '^': (0, -1), # Move north
+        '>': (1, 0),  # Move east
+        'v': (0, 1),  # Move south
+        '<': (-1, 0), # Move west
+    }
+    boxList = []
+    
+    # Translate the instruction character to a coordinate change
+    instruction = instructDict[instruction]
+    currRobotPos = (robotPositionList[0], robotPositionList[1])
+    newRobotPos = (currRobotPos[0] + instruction[0], currRobotPos[1] + instruction[1])
+    
+    # Check if the robot moves to an empty tile, update positions accordingly
+    if warehouseMapDict[newRobotPos] == '.':
+        warehouseMapDict[newRobotPos] = '@'
+        warehouseMapDict[currRobotPos] = '.'
+        currRobotPos = newRobotPos
+    
+    # Handling the scenario where the robot pushes a box
+    if warehouseMapDict[newRobotPos] == 'O':
+        currBoxPos = newRobotPos
+        boxList.append([currBoxPos[0], currBoxPos[1]])
+        newBoxPos = (currBoxPos[0] + instruction[0], currBoxPos[1] + instruction[1])
+        while True:
+            # Stop if there is a wall
+            if warehouseMapDict[newBoxPos] == '#':
+                break
+            # Move the box if the next position is empty
+            elif warehouseMapDict[newBoxPos] == '.':
+                #update robot position
+                warehouseMapDict[newRobotPos] = '@'
+                warehouseMapDict[currRobotPos] = '.'
+                # Update positions of any boxes
+                for box in boxList:
+                    warehouseMapDict[(box[0] + instruction[0], box[1] + instruction[1])] = 'O'
+                currRobotPos = newRobotPos
+                break
+            # If there is another box, continue pushing
+            elif warehouseMapDict[newBoxPos] == 'O':
+                currBoxPos = newBoxPos
+                newBoxPos = (currBoxPos[0] + instruction[0], currBoxPos[1] + instruction[1])
+                boxList.append([currBoxPos[0], currBoxPos[1]])
+    
+    # Update the robot's position list before returning
+    robotPositionList = [currRobotPos[0], currRobotPos[1]]
+    return robotPositionList
+
+def move_robot_prt2(warehouseMapDict, instruction, robotPositionList):
     # Dictionary linking movement instructions with coordinate changes
     instructDict = {
         '^': (0, -1), # Move north
@@ -130,7 +180,7 @@ def part_1(warehouseMapDict, instructionTuple, robotPositionList):
     
     # Execute each instruction to move the robot and display the updated warehouse
     for instruction in instructionTuple:
-        currRobotPos = move_robot(warehouseMapDict, instruction, currRobotPos)
+        currRobotPos = move_robot_prt1(warehouseMapDict, instruction, currRobotPos)
         display_warehouse(warehouseMapDict)
     
     # Calculate part1answer based on final positions of 'O' elements in map
@@ -141,7 +191,19 @@ def part_1(warehouseMapDict, instructionTuple, robotPositionList):
     return part1answer
 
 def part_2(input):
+    currRobotPos = robotPositionList
     part2answer = 0
+    
+    # Execute each instruction to move the robot and display the updated warehouse
+    for instruction in instructionTuple:
+        currRobotPos = move_robot_prt1(warehouseMapDict, instruction, currRobotPos)
+        display_warehouse(warehouseMapDict)
+    
+    # Calculate part2answer based on final positions of 'O' elements in map
+    for coordinate, item in warehouseMapDict.items():
+        if item == 'O': 
+            part2answer += (100 * coordinate[1]) + coordinate[0]
+    
     return part2answer
 
 ## Main execution ##
@@ -159,6 +221,7 @@ else:
 # Parse the input file and process it into data required for part_1 and part_2
 warehouseMapDict, instructionTuple, robotPositionList = parse_file(filePaths[choice])
 part1answer = part_1(warehouseMapDict, instructionTuple, robotPositionList)
+part2answer = part_2(warehouseMapDict, instructionTuple, robotPositionList)
 
 # Output results and verify with expected results for testing accuracy
 # Part 1 outputs
@@ -168,7 +231,6 @@ if choice == '2':
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2 outputs
-part2answer = part_2(input)
 print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
     testCorrect = part2answer == expectedTestOutputPart2
