@@ -40,36 +40,41 @@ def part_1(data_sets):
         button_B_Y_increase = int(button_B_match.group(2))
         X_Prize = int(prize_match.group(1))
         Y_Prize = int(prize_match.group(2))
-        
         a, b = symbols('a b')
-        
         eq1 = Eq(a * button_A_X_increase + b * button_B_X_increase, X_Prize)
         eq2 = Eq(a * button_A_Y_increase + b * button_B_Y_increase, Y_Prize)
-        print(eq1)
-        print(eq2)
         solution = solve((eq1, eq2), (a, b))
-        print(solution)
         if solution and solution[a] == int(solution[a]) and solution[b] == int(solution[b]):
-                a_value, b_value = solution[a], solution[b] 
-                
-                print(f"Je moet {a_value} keer op knop A drukken en {b_value} keer op knop B drukken.")
-                tokens += ((3*a_value)+b_value) 
-                print(f"Dat is een totaal van {tokens}.")       
-        else:
-                print("Geen oplossing gevonden.")
+            a_value, b_value = solution[a], solution[b] 
+            #print(f"Je moet {a_value} keer op knop A drukken en {b_value} keer op knop B drukken.")
+            tokens += ((3*a_value)+b_value) 
+            #print(f"Dat is een totaal van {tokens}.")       
     return tokens
 
-def part_2(input):
-    part2answer = 0
-    
-    
-    
-    
-    
-    
-    
-    
-    return part2answer
+def part_2(data_sets):
+# Opstellen van de vergelijkingen
+    tokens=0
+    for index, dataset in enumerate(data_sets, start=1):
+        # Zoek naar de patterns in de tekst
+        button_A_match = re.search(r"Button A: X\+(\d+), Y\+(\d+)", dataset)
+        button_B_match = re.search(r"Button B: X\+(\d+), Y\+(\d+)", dataset)
+        prize_match = re.search(r"Prize: X=(\d+), Y=(\d+)", dataset)
+        button_A_X_increase = int(button_A_match.group(1))
+        button_A_Y_increase = int(button_A_match.group(2))
+        button_B_X_increase = int(button_B_match.group(1))
+        button_B_Y_increase = int(button_B_match.group(2))
+        X_Prize = int(prize_match.group(1))+10000000000000
+        Y_Prize = int(prize_match.group(2))+10000000000000
+        a, b = symbols('a b')
+        eq1 = Eq(a * button_A_X_increase + b * button_B_X_increase, X_Prize)
+        eq2 = Eq(a * button_A_Y_increase + b * button_B_Y_increase, Y_Prize)
+        solution = solve((eq1, eq2), (a, b))
+        if solution and solution[a] == int(solution[a]) and solution[b] == int(solution[b]):
+            a_value, b_value = solution[a], solution[b] 
+             #print(f"Je moet {a_value} keer op knop A drukken en {b_value} keer op knop B drukken.")
+            tokens += ((3*a_value)+b_value) 
+            #print(f"Dat is een totaal van {tokens}.")       
+    return tokens
 
 ## Main execution ##
 # Prompt user for input choice and parse file
@@ -95,7 +100,6 @@ if choice == '2':
     print(f'This answer is {testCorrect}! Expected {expectedTestOutputPart1} and got {part1answer}')
 
 # Part 2 outputs
-part2answer = part_2(input)
 print(f'The answer to day {day} part 2 = {part2answer}')
 if choice == '2':
     testCorrect = part2answer == expectedTestOutputPart2
