@@ -17,11 +17,36 @@ expectedTestOutputPart2 = 0
 
 ## Methods ##
 def parse_file(filepath):
-    parsedFile = ""
+    # Parse the input file into two parts: the warehouse map and instructions
+    _list0, _list1, _list2 = [], [], []
+    instructionTuple = tuple()
+    warehouseMapDict = {}
     with open(filepath, 'r') as file:
         for line in file:
-            parsedFile += line
-    return parsedFile
+            _list0.append(line.strip())
+    # Identify the index of the empty line separating the two data sections
+    index = _list0.index('')
+    
+    # Process the first section of the file into the warehouse map
+    for _text in _list0[:index]: _list2.append(_text)
+    # Iterate over each line to assign coordinates and values
+    yCord = -1
+    for _line in _list2:
+        yCord += 1
+        xCord = -1
+        for _tile in _line:
+            xCord += 1
+            warehouseMapDict[(xCord, yCord)] = _tile
+        
+    # Process the second section of the file into the instructions
+    for _text in _list0[index + 1:]:
+        for character in _text:
+            _list1.append(character)
+    instructionTuple = tuple(_list1) 
+
+    print(warehouseMapDict, instructionTuple)
+    
+    return warehouseMapDict, instructionTuple
 
 def part_1(input):
     part1answer = 0
