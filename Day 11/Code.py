@@ -18,37 +18,62 @@ expectedTestOutputPart2 = 0
 
 ## Methods ##
 def parse_file(filepath):
+    stoneDict = {}
     with open(filepath, 'r') as file:
         stoneList = file.read().split(' ')
-    return stoneList
+    for stone in stoneList:
+        stoneDict[stone] = 1
+    return stoneList, stoneDict
 
-def gekke_stenen_doen_dansjes_2(stoneList):
-    aantal_knipper = 75
-    for knipper in range(1, aantal_knipper +1):
-        start_time = time.time() # Start the timer
+def part_1(stoneList):
+    numberOfBlinks = 25
+    for blink in range(1, numberOfBlinks + 1):
+        startTime = time.time()  # Start the timer
         index = 0
         while index < len(stoneList):
-            getal = stoneList[index]
-            if getal == '0':
-                stoneList[index] = '1'  # Directly assign '1' instead of converting
-            elif len(getal) % 2 == 0: # Even aantal getallen
-                helft = len(getal) // 2
-                getal1 = getal[:helft]  # Convert slicing result to int
-                getal2 = str(int(getal[helft:]))
-                stoneList[index:index+1] = [getal1, getal2]  # Slice assignment avoids pop/insert
+            number = stoneList[index]
+            if number == '0':
+                stoneList[index] = '1'
+            elif len(number) % 2 == 0:
+                half = len(number) // 2  # Half
+                number1 = number[:half]
+                number2 = str(int(number[half:]))
+                stoneList[index:index+1] = [number1, number2]
                 index += 1
             else:
-                stoneList[index] = str(int(getal) * 2024)  # Compute new value in-place
+                stoneList[index] = str(int(number) * 2024)
             index += 1
-        end_time = time.time()
-        aantal_stenen = len(stoneList)
-        print(f'Na de {knipper}e keer knipperen hebben we: {aantal_stenen} stenen. Dit duurde {(end_time - start_time):.4f} seconde')
-        # print(f'Stenen lijst: {stoneList}')
-    return aantal_stenen
+        endTime = time.time()
+        numberOfStones = len(stoneList)
+        # print(f'After the {blink}th blink, we have: {numberOfStones} stones. This took {(endTime - startTime):.4f} seconds')
+        # print(f'Stone list: {stoneList}')
+    return numberOfStones
 
-def part_2(input):
-    part2answer = 0
-    return part2answer
+def part_2(stoneDict):
+    numberOfBlinks = 75
+    for blink in range(1, numberOfBlinks + 1):
+        startTime = time.time()  # Start the timer
+        for stoneNumber in list(stoneDict.keys()):
+            stoneQuantity = stoneDict[stoneNumber]
+            if stoneNumber == '0':
+                stoneDict['1'] = stoneDict.get('1', 0) + stoneQuantity
+                del stoneDict[stoneNumber]
+            elif len(stoneNumber) % 2 == 0:
+                half = len(stoneNumber) // 2  # Half
+                number1 = stoneNumber[:half]
+                number2 = str(int(stoneNumber[half:]))
+                stoneDict[number1] = stoneDict.get(number1, 0) + stoneQuantity
+                stoneDict[number2] = stoneDict.get(number2, 0) + stoneQuantity
+                del stoneDict[stoneNumber]
+            else:
+                newStoneNumber = str(int(stoneNumber) * 2024)
+                stoneDict[newStoneNumber] = stoneDict.get(newStoneNumber, 0) + stoneQuantity
+                del stoneDict[stoneNumber]
+        endTime = time.time()
+        numberOfStones = len(stoneList)
+        print(f'After the {blink}th blink, we have: {numberOfStones} stones. This took {(endTime - startTime):.4f} seconds')
+        # print(f'Stone list: {stoneDict}')
+    return numberOfStones
 
 ## Main execution ##
 # Prompt user for input choice and parse file
@@ -62,8 +87,10 @@ else:
     choice = input("Enter choice (1/2): ")
     
 # Parse the input file and process it into data
-stoneList = parse_file(filePaths[choice])
-part1answer = gekke_stenen_doen_dansjes_2(stoneList)
+stoneList, stoneDict = parse_file(filePaths[choice])
+# part1answer = part_1(stoneList)
+part1answer = 0
+part2answer = part_2(stoneDict)
 
 # Output results for both parts and verify test results if applicable
 # Part 1 outputs
