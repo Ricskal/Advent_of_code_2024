@@ -14,11 +14,18 @@ filePaths = {
 defaultFile = True
 expectedTestOutputPart1 = 0
 expectedTestOutputPart2 = 0
+# Variables for solution
+directionDict = {
+    'North': (0, -1),
+    'East': (1, 0), 
+    'South': (0, 1),
+    'West': (-1, 0)
+}
 
 ## Methods ##
 def parse_file(filepath):
     _list0 = []
-    flowerfieldDict, flowerCountDict = {}, {}
+    flowerfieldDict = {}
     with open(filepath, 'r') as file:
         for line in file:
             _list0.append(line.strip())
@@ -27,57 +34,47 @@ def parse_file(filepath):
     for _line in _list0:
         yCord += 1
         xCord = -1
-        for _tile in _line:
+        for _flower in _line:
             xCord += 1
-            flowerfieldDict[(xCord, yCord)] = _tile
-    
-    for flower in flowerfieldDict.values():
-        flowerCountDict[flower] = flowerCountDict.get(flower, 0) + 1
-        
-    return flowerfieldDict, flowerCountDict
+            if _flower in flowerfieldDict: flowerfieldDict[_flower].append((xCord, yCord))
+            elif _flower not in flowerfieldDict: flowerfieldDict[_flower] = [(xCord, yCord)]
 
-def part_1(flowerfieldDict, flowerCountDict):
-    part1answer = 0
-    flowerSumDict = {}
-    directionDict = {
-        'North': (0, -1),
-        'East': (1, 0), 
-        'South': (0, 1),
-        'West': (-1, 0)
-    }
-    for flowerCor in flowerfieldDict:
-        
-        flower = flowerfieldDict[flowerCor]
-        notSameFlowerCount = flowerfieldDict.get(flowerCor[1], 0)
-        newFlower = flowerfieldDict.get((flowerCor[0] + directionDict['North'][0], flowerCor[1] + directionDict['North'][1]), '&')[0]
-        if newFlower != flower:
-            notSameFlowerCount += 1
-            flowerfieldDict[flowerCor] = [flower, notSameFlowerCount]
+    return flowerfieldDict
+
+def defineFlowerArea(flowerfieldDict, directionDict):
+    flowerArea = {}
+    areaNumber = 0
+    for flowerType in flowerfieldDict:
+        if flowerType not in flowerArea:
+            # Start new area and add the first flower and remove from flowerfieldDict
+            flowerArea[(flowerType, areaNumber)] = [flowerfieldDict[flowerType].pop(0)]
+        else:
+            for flowerCoordinate in flowerfieldDict[flowerType]:
+                
+                northFlower = (flowerCoordinate[0] + directionDict['North'][0], flowerCoordinate[1] + directionDict['North'][1])
+                eastFlower = (flowerCoordinate[0] + directionDict['East'][0], flowerCoordinate[1] + directionDict['East'][1])
+                southFlower = (flowerCoordinate[0] + directionDict['South'][0], flowerCoordinate[1] + directionDict['South'][1])
+                westFlower = (flowerCoordinate[0] + directionDict['West'][0], flowerCoordinate[1] + directionDict['West'][1])
+                if newFlower != flower:
+                    notSameFlowerCount += 1
+                    flowerfieldDict[flowerCoordinate] = [flower, notSameFlowerCount]             
+
+# def part_1(flowerfieldDict, directionDict):
+    # part1answer = 0
+    # flowerSumDict = {}
+    
+    # for flowerCoordinate in flowerfieldDict:
+    #     flower = flowerfieldDict[flowerCoordinate]
+        # for flowerArea in flowerAreaDict:
             
-        newFlower = flowerfieldDict.get((flowerCor[0] + directionDict['East'][0], flowerCor[1] + directionDict['East'][1]), '&')[0]
-        if newFlower != flower:
-            notSameFlowerCount += 1
-            flowerfieldDict[flowerCor] = [flower, notSameFlowerCount]
+        # newFlower = flowerfieldDict.get((flowerCoordinate[0] + directionDict['North'][0], flowerCoordinate[1] + directionDict['North'][1]), '&')[0]
+        # if newFlower != flower:
+        #     notSameFlowerCount += 1
+        #     flowerfieldDict[flowerCoordinate] = [flower, notSameFlowerCount]
 
-        newFlower = flowerfieldDict.get((flowerCor[0] + directionDict['South'][0], flowerCor[1] + directionDict['South'][1]), '&')[0]
-        if newFlower != flower:
-            notSameFlowerCount += 1
-            flowerfieldDict[flowerCor] = [flower, notSameFlowerCount]
-
-        newFlower = flowerfieldDict.get((flowerCor[0] + directionDict['West'][0], flowerCor[1] + directionDict['West'][1]), '&')[0]
-        if newFlower != flower:
-            notSameFlowerCount += 1
-            flowerfieldDict[flowerCor] = [flower, notSameFlowerCount]
-        
-        if not isinstance(flowerfieldDict[flowerCor], list): 
-            flowerfieldDict[flowerCor] = [flower, 0]
-
-    for flower in flowerfieldDict.values():
-        flowerSumDict[flower[0]] = flowerSumDict.get(flower[0], 0) + flower[1]
+    # for flower in flowerfieldDict.values():
+    #     flowerSumDict[flower[0]] = flowerSumDict.get(flower[0], 0) + flower[1]
         # flowerSumDict[flower[0]] = flowerSumDict.get(flower[0], 0) + flowerfieldDict[flower[1]]
-        
-    
-    print(flowerSumDict)
     
     return part1answer
 
@@ -97,8 +94,8 @@ else:
     choice = input("Enter choice (1/2): ")
     
 # Parse the input file and process it into data
-flowerfieldDict, flowerCountDict = parse_file(filePaths[choice])
-part1answer = part_1(flowerfieldDict, flowerCountDict)
+flowerfieldDict = parse_file(filePaths[choice])
+part1answer = defineFlowerArea(flowerfieldDict, directionDict)
 part2answer = part_2(input)
 
 # Output results for both parts and verify test results if applicable
